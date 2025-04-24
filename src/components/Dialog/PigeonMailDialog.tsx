@@ -284,6 +284,7 @@ export const PigeonMailDialog = ({
         });
         onOpenChange(false); // Close dialog on success
       } else {
+        onOpenChange(false); // Close dialog on success
         throw new Error("Failed to send message - no message ID returned");
       }
     } catch (e) {
