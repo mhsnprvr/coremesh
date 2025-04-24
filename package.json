@@ -22,7 +22,6 @@
       "deno task format"
     ]
   },
-  "homepage": "https://meshtastic.org",
   "dependencies": {
     "@meshtastic/core": "npm:@jsr/meshtastic__core@2.6.2",
     "@meshtastic/js": "npm:@jsr/meshtastic__js@2.6.0-0",
