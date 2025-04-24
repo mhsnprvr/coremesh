@@ -1,4 +1,5 @@
 import { create } from "@bufbuild/protobuf";
+import { ConnectionButton } from "@components/ConnectionButton.tsx";
 import { DeviceSelectorButton } from "@components/DeviceSelectorButton.tsx";
 import ThemeSwitcher from "@components/ThemeSwitcher.tsx";
 import { Avatar } from "@components/UI/Avatar.tsx";
@@ -7,12 +8,7 @@ import { Code } from "@components/UI/Typography/Code.tsx";
 import { useAppStore } from "@core/stores/appStore.ts";
 import { useDeviceStore } from "@core/stores/deviceStore.ts";
 import { Protobuf, Types } from "@meshtastic/core";
-import {
-  HomeIcon,
-  PlusIcon,
-  SearchIcon,
-  TestTubeDiagonalIcon,
-} from "lucide-react";
+import { HomeIcon, SearchIcon, TestTubeDiagonalIcon } from "lucide-react";
 import { DeviceActions } from "./DeviceActions.tsx";
 
 export const DeviceSelector = () => {
@@ -22,9 +18,15 @@ export const DeviceSelector = () => {
     setSelectedDevice,
     setCommandPaletteOpen,
     setConnectDialogOpen,
+    userPosition,
   } = useAppStore();
 
   const handleMockConnect = () => {
+    if (!userPosition) {
+      console.log("User position not available, skipping mock connection.");
+      return;
+    }
+
     const mockDeviceId = 999; // Use a distinct ID for the mock device
     const existingDevice = getDevices().find((d) => d.id === mockDeviceId);
 
@@ -50,14 +52,14 @@ export const DeviceSelector = () => {
         num: mockDeviceId,
         user: {
           id: "!mockusr",
-          longName: "Mock Device (Libya)",
+          longName: "Mock Device",
           shortName: "MCK",
           macaddr: new Uint8Array([0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff]),
           hwModel: Protobuf.Mesh.HardwareModel.TBEAM,
         },
         position: {
-          latitudeI: 328872000,
-          longitudeI: 131913000,
+          latitudeI: userPosition[1] * 1e7,
+          longitudeI: userPosition[0] * 1e7,
           altitude: 30,
           time: Math.floor(Date.now() / 1000),
         },
@@ -108,14 +110,9 @@ export const DeviceSelector = () => {
             </DeviceSelectorButton>
           ))}
           <Separator />
-          <button
-            type="button"
-            title="Connect New Device"
-            onClick={() => setConnectDialogOpen(true)}
-            className="transition-all duration-300"
-          >
-            <PlusIcon />
-          </button>
+          <div className="flex flex-col items-center">
+            <ConnectionButton size="small" />
+          </div>
           {/* Add Mock Connection Button only in development */}
           {import.meta.env.MODE === "development" && (
             <button

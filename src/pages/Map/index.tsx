@@ -6,7 +6,7 @@ import { useAppStore } from "@core/stores/appStore.ts";
 import { useDevice } from "@core/stores/deviceStore.ts";
 import type { Protobuf } from "@meshtastic/core";
 import { FilterControl } from "@pages/Map/FilterControl.tsx";
-import { bbox, circle, lineString, Units } from "@turf/turf";
+import { bbox, circle, lineString, type Units } from "@turf/turf";
 import { MapPinIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import MapGl, {
@@ -43,14 +43,14 @@ const MapPage = () => {
   const { nodes, waypoints } = useDevice();
   const { theme } = useTheme();
   const { default: map } = useMap();
-  const { userPosition, setUserPosition } = useAppStore();
+  const { userPosition, setUserPosition, locationError, setLocationError } =
+    useAppStore();
   const longPressTimeoutRef = useRef<number | null>(null);
   const touchStartPositionRef = useRef<{ lng: number; lat: number } | null>(
     null
   );
 
   const darkMode = theme === "dark";
-  const [locationError, setLocationError] = useState<string | null>(null);
 
   const [selectedNode, setSelectedNode] =
     useState<Protobuf.Mesh.NodeInfo | null>(null);
@@ -77,64 +77,6 @@ const MapPage = () => {
     resetFilters,
     filterConfigs,
   } = useNodeFilters(validNodes);
-
-  // Handle geolocation
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { longitude, latitude } = position.coords;
-          setUserPosition([longitude, latitude]);
-          setLocationError(null);
-          console.log("Got user location:", [longitude, latitude]);
-        },
-        (error) => {
-          console.error("Error getting location:", error);
-          setLocationError(error.message);
-
-          // Set mock position in development environment
-          if (process.env.NODE_ENV === "development") {
-            // Set mock position near the first valid node if available
-            if (validNodes.length > 0) {
-              const firstNode = validNodes[0];
-              const nodePosition = convertToLatLng(firstNode.position);
-              // Add a small offset to the node's position
-              const mockPosition: [number, number] = [
-                nodePosition.longitude + 0.001,
-                nodePosition.latitude + 0.001,
-              ];
-              setUserPosition(mockPosition);
-              console.log("Using mock position in development:", mockPosition);
-            } else {
-              // Default mock position if no nodes available
-              const defaultMockPosition: [number, number] = [0, 0];
-              setUserPosition(defaultMockPosition);
-              console.log(
-                "Using default mock position in development:",
-                defaultMockPosition
-              );
-            }
-          }
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0,
-        }
-      );
-    } else {
-      setLocationError("Geolocation is not supported by your browser");
-      // Set mock position in development environment
-      if (process.env.NODE_ENV === "development") {
-        const defaultMockPosition: [number, number] = [0, 0];
-        setUserPosition(defaultMockPosition);
-        console.log(
-          "Using default mock position in development:",
-          defaultMockPosition
-        );
-      }
-    }
-  }, [validNodes, setUserPosition]);
 
   // Create circle source data
   const circleSource = useMemo(() => {
@@ -244,7 +186,7 @@ const MapPage = () => {
     if (center) {
       map.easeTo(center);
     }
-  }, [filteredNodes, map]);
+  }, [map, validNodes]);
 
   // Generate all markers
   const markers = useMemo(

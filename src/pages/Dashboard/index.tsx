@@ -1,4 +1,4 @@
-import { Button } from "@components/UI/Button.tsx";
+import { ConnectionButton } from "@components/ConnectionButton.tsx";
 import { Separator } from "@components/UI/Seperator.tsx";
 import { Heading } from "@components/UI/Typography/Heading.tsx";
 import { Subtle } from "@components/UI/Typography/Subtle.tsx";
@@ -11,7 +11,6 @@ import {
   BluetoothIcon,
   ListPlusIcon,
   NetworkIcon,
-  PlusIcon,
   UsbIcon,
   UsersIcon,
 } from "lucide-react";
@@ -120,14 +119,7 @@ export const Dashboard = () => {
               <ListPlusIcon size={48} className="mx-auto text-text-secondary" />
               <Heading as="h3">No Devices</Heading>
               <Subtle>Connect at least one device to get started</Subtle>
-              <Button
-                className="gap-2 dark:bg-white dark:text-slate-900 dark:hover:text-slate-100"
-                variant="default"
-                onClick={() => setConnectDialogOpen(true)}
-              >
-                <PlusIcon size={16} />
-                New Connection
-              </Button>
+              <ConnectionButton />
             </div>
           )}
         </div>

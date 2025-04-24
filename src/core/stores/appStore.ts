@@ -27,6 +27,7 @@ interface AppState {
   errors: ErrorState[];
   showSidebar: boolean;
   userPosition: [number, number] | null;
+  locationError: string | null;
 
   setRasterSources: (sources: RasterSource[]) => void;
   addRasterSource: (source: RasterSource) => void;
@@ -40,6 +41,7 @@ interface AppState {
   setNodeNumDetails: (nodeNum: number) => void;
   setShowSidebar: (show: boolean) => void;
   setUserPosition: (position: [number, number] | null) => void;
+  setLocationError: (error: string | null) => void;
 
   // Error management
   hasErrors: () => boolean;
@@ -63,6 +65,7 @@ export const useAppStore = create<AppState>()((set, get) => ({
   errors: [],
   showSidebar: true,
   userPosition: null,
+  locationError: null,
 
   setRasterSources: (sources: RasterSource[]) => {
     set(
@@ -130,6 +133,13 @@ export const useAppStore = create<AppState>()((set, get) => ({
     set(
       produce<AppState>((draft) => {
         draft.userPosition = position;
+      })
+    );
+  },
+  setLocationError: (error) => {
+    set(
+      produce<AppState>((draft) => {
+        draft.locationError = error;
       })
     );
   },

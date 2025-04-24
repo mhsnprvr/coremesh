@@ -7,6 +7,7 @@ import { NewDeviceDialog } from "@components/Dialog/NewDeviceDialog.tsx";
 import { Toaster } from "@components/Toaster.tsx";
 import { ErrorPage } from "@components/UI/ErrorPage.tsx";
 import Footer from "@components/UI/Footer.tsx";
+import { UserPositionTracker } from "@components/UserPositionTracker.tsx";
 import { useAppStore } from "@core/stores/appStore.ts";
 import { useDeviceStore } from "@core/stores/deviceStore.ts";
 import { Dashboard } from "@pages/Dashboard/index.tsx";
@@ -23,6 +24,7 @@ export const App = (): JSX.Element => {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorPage}>
+      <UserPositionTracker />
       <NewDeviceDialog
         open={connectDialogOpen}
         onOpenChange={(open) => {
