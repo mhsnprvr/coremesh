@@ -140,7 +140,7 @@ export const NewDeviceDialog = ({ open, onOpenChange }: NewDeviceProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent aria-describedby={undefined}>
         <DialogClose />
         <DialogHeader>
           <DialogTitle>Connect New Device</DialogTitle>

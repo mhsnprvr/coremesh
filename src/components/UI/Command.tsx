@@ -3,7 +3,12 @@ import { Command as CommandPrimitive } from "cmdk";
 import { Search } from "lucide-react";
 import * as React from "react";
 
-import { Dialog, DialogContent } from "@components/UI/Dialog.tsx";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@components/UI/Dialog.tsx";
 import { cn } from "@core/utils/cn.ts";
 
 const Command = React.forwardRef<
@@ -14,7 +19,7 @@ const Command = React.forwardRef<
     ref={ref}
     className={cn(
       "flex h-full w-full flex-col overflow-hidden rounded-lg bg-white dark:bg-slate-800",
-      className,
+      className
     )}
     {...props}
   />
@@ -24,7 +29,14 @@ Command.displayName = CommandPrimitive.displayName;
 const CommandDialog = ({ children, ...props }: DialogProps) => {
   return (
     <Dialog {...props}>
-      <DialogContent className="overflow-hidden p-0 shadow-2xl [&_[dialog-overlay]]:bg-red-100">
+      <DialogContent
+        className="overflow-hidden p-0"
+        aria-describedby={undefined}
+      >
+        <DialogTitle className="sr-only">Command Menu</DialogTitle>
+        <DialogDescription className="sr-only">
+          Search and navigate through available commands
+        </DialogDescription>
         <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-slate-500 [&_[cmdk-group]]:px-2 [&_[cmdk-group]_+[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
           {children}
         </Command>
@@ -46,7 +58,7 @@ const CommandInput = React.forwardRef<
       ref={ref}
       className={cn(
         "flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-hidden placeholder:text-slate-400 disabled:cursor-not-allowed disabled:opacity-50 dark:text-slate-50",
-        className,
+        className
       )}
       {...props}
     />
@@ -89,7 +101,7 @@ const CommandGroup = React.forwardRef<
     ref={ref}
     className={cn(
       "overflow-hidden py-3 px-2 text-slate-700 dark:text-slate-400 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:pb-1.5 [&_[cmdk-group-heading]]:text-sm [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:text-slate-900 dark:[&_[cmdk-group-heading]]:text-slate-300",
-      className,
+      className
     )}
     {...props}
   />
@@ -117,7 +129,7 @@ const CommandItem = React.forwardRef<
     ref={ref}
     className={cn(
       "relative flex cursor-default select-none items-center rounded-md py-1.5 px-2 text-sm font-medium outline-hidden aria-selected:bg-slate-100 data-[disabled='true']:pointer-events-none data-[disabled='true']:opacity-50 dark:aria-selected:bg-slate-700 dark:text-white ",
-      className,
+      className
     )}
     {...props}
   />
@@ -133,7 +145,7 @@ const CommandShortcut = ({
     <span
       className={cn(
         "ml-auto text-xs tracking-widest text-slate-500",
-        className,
+        className
       )}
       {...props}
     />

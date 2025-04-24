@@ -38,22 +38,49 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
-  <DialogPortal>
-    <DialogOverlay />
-    <DialogPrimitive.Content
-      aria-describedby={undefined}
-      ref={ref}
-      className={cn(
-        "fixed z-50 grid w-full bg-white  max-w-[512px] max-h-[100vh] overflow-y-auto scale-100 gap-4 p-6 opacity-100 animate-in fade-in-90 slide-in-from-bottom-10 sm:max-w-lg sm:rounded-lg sm:zoom-in-90 sm:slide-in-from-bottom-0 dark:text-slate-900",
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </DialogPrimitive.Content>
-  </DialogPortal>
-));
+>(({ className, children, ...props }, ref) => {
+  // Basic check for DialogTitle in immediate children
+  const childArray = React.Children.toArray(children);
+  const hasTitle = childArray.some((child) => {
+    if (!React.isValidElement(child)) return false;
+
+    // Check direct child
+    if (child.type === DialogTitle) return true;
+
+    // Check if it's DialogHeader (which typically contains DialogTitle)
+    if (
+      child.type === DialogHeader &&
+      child.props &&
+      typeof child.props === "object"
+    ) {
+      const headerChildren = React.Children.toArray(
+        (child.props as { children?: React.ReactNode }).children || []
+      );
+      return headerChildren.some(
+        (headerChild) =>
+          React.isValidElement(headerChild) && headerChild.type === DialogTitle
+      );
+    }
+
+    return false;
+  });
+
+  return (
+    <DialogPortal>
+      <DialogOverlay />
+      <DialogPrimitive.Content
+        ref={ref}
+        className={cn(
+          "fixed z-50 grid w-full bg-white max-w-[512px] max-h-[100vh] overflow-y-auto scale-100 gap-4 p-6 opacity-100 animate-in fade-in-90 slide-in-from-bottom-10 sm:max-w-lg sm:rounded-lg sm:zoom-in-90 sm:slide-in-from-bottom-0 dark:text-slate-900",
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </DialogPrimitive.Content>
+    </DialogPortal>
+  );
+});
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogClose = ({
