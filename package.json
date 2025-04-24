@@ -98,6 +98,7 @@
     "autoprefixer": "^10.4.21",
     "gzipper": "^8.2.1",
     "happy-dom": "^17.4.4",
+    "netlify-plugin-deno": "^1.0.0",
     "postcss": "^8.5.3",
     "simple-git-hooks": "^2.12.1",
     "tailwind-merge": "^3.1.0",
