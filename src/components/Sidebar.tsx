@@ -5,6 +5,7 @@ import { Subtle } from "@components/UI/Typography/Subtle.tsx";
 import { useAppStore } from "@core/stores/appStore.ts";
 import type { Page } from "@core/stores/deviceStore.ts";
 import { useDevice } from "@core/stores/deviceStore.ts";
+import { useEffect, useRef } from "react";
 
 import {
   BatteryMediumIcon,
@@ -29,6 +30,26 @@ export const Sidebar = ({ children }: SidebarProps) => {
   const myMetadata = metadata.get(0);
   const { activePage, setActivePage, setDialogOpen } = useDevice();
   const { showSidebar, setShowSidebar } = useAppStore();
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
+        setShowSidebar(false);
+      }
+    };
+
+    if (showSidebar) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showSidebar, setShowSidebar]);
 
   interface NavLink {
     name: string;
@@ -65,7 +86,10 @@ export const Sidebar = ({ children }: SidebarProps) => {
   ];
 
   return showSidebar ? (
-    <div className="min-w-[280px] max-w-min flex-col overflow-y-auto border-r-[0.5px] bg-background-primary border-slate-300 dark:border-slate-400">
+    <div
+      ref={sidebarRef}
+      className="min-w-[280px] max-w-min flex-col overflow-y-auto border-r-[0.5px] bg-background-primary border-slate-300 dark:border-slate-400"
+    >
       {myNode === undefined ? (
         <div className="flex flex-col items-center justify-center px-8 py-6">
           <Spinner />

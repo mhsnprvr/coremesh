@@ -11,7 +11,6 @@ import { MapPinIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import MapGl, {
   AttributionControl,
-  GeolocateControl,
   Layer,
   Marker,
   NavigationControl,
@@ -247,27 +246,21 @@ const MapPage = () => {
               color: darkMode ? "black" : "",
             }}
           />
-          <GeolocateControl
-            position="top-right"
-            positionOptions={{ enableHighAccuracy: true }}
-            trackUserLocation
-            onGeolocate={(e) => {
-              const { coords } = e;
-              setUserPosition([coords.longitude, coords.latitude]);
-              setLocationError(null);
-              console.log("User location updated:", [
-                coords.longitude,
-                coords.latitude,
-              ]);
-            }}
-            onError={(error) => {
-              console.error("GeolocateControl error:", error);
-              setLocationError(error.message);
-            }}
-          />
           <NavigationControl position="top-right" showCompass={false} />
-
           <ScaleControl />
+          <div className="absolute bottom-24 right-2 flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={getMapBounds}
+              className="bg-white dark:bg-slate-800 p-2 rounded-lg shadow-lg hover:bg-slate-100 dark:hover:bg-slate-700"
+              title="Recenter map"
+            >
+              <MapPinIcon
+                size={16}
+                className="text-slate-900 dark:text-white"
+              />
+            </button>
+          </div>
           {locationError && (
             <div
               style={{
