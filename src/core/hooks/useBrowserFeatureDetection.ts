@@ -15,7 +15,8 @@ export function useBrowserFeatureDetection(): BrowserSupport {
       [
         "Secure Context",
         globalThis.location.protocol === "https:" ||
-        globalThis.location.hostname === "localhost",
+          globalThis.location.hostname === "localhost" ||
+          globalThis.location.hostname === "127.0.0.1",
       ],
     ];
 
@@ -25,7 +26,7 @@ export function useBrowserFeatureDetection(): BrowserSupport {
         list.push(feature);
         return acc;
       },
-      { supported: [], unsupported: [] },
+      { supported: [], unsupported: [] }
     );
   }, []);
 
