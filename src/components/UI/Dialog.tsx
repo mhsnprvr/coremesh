@@ -27,7 +27,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     className={cn(
       "fixed inset-0 z-50 bg-black/50 backdrop-blur-xs transition-opacity animate-in fade-in",
-      className,
+      className
     )}
     {...props}
     ref={ref}
@@ -46,7 +46,7 @@ const DialogContent = React.forwardRef<
       ref={ref}
       className={cn(
         "fixed z-50 grid w-full bg-white  max-w-[512px] max-h-[100vh] overflow-y-auto scale-100 gap-4 p-6 opacity-100 animate-in fade-in-90 slide-in-from-bottom-10 sm:max-w-lg sm:rounded-lg sm:zoom-in-90 sm:slide-in-from-bottom-0 dark:text-slate-900",
-        className,
+        className
       )}
       {...props}
     >
@@ -59,15 +59,13 @@ DialogContent.displayName = DialogPrimitive.Content.displayName;
 const DialogClose = ({
   className,
   ...props
-}:
-  & DialogPrimitive.DialogCloseProps
-  & React.RefAttributes<HTMLButtonElement>
-  & { className?: string }) => (
+}: DialogPrimitive.DialogCloseProps &
+  React.RefAttributes<HTMLButtonElement> & { className?: string }) => (
   <DialogPrimitive.Close
     aria-label="Close"
     className={cn(
       "absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900",
-      className,
+      className
     )}
     {...props}
   >
@@ -83,7 +81,7 @@ const DialogHeader = ({
   <div
     className={cn(
       "flex flex-col space-y-2 text-center sm:text-left ",
-      className,
+      className
     )}
     {...props}
   />
@@ -97,7 +95,7 @@ const DialogFooter = ({
   <div
     className={cn(
       "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
-      className,
+      className
     )}
     {...props}
   />

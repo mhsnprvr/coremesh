@@ -19,9 +19,7 @@ export interface RebootOTADialogProps {
 
 const DEFAULT_REBOOT_DELAY = 5; // seconds
 
-export const RebootOTADialog = (
-  { open, onOpenChange }: RebootOTADialogProps,
-) => {
+export const RebootOTADialog = ({ open, onOpenChange }: RebootOTADialogProps) => {
   const { connection } = useDevice();
   const [time, setTime] = useState<number>(DEFAULT_REBOOT_DELAY);
   const [isScheduled, setIsScheduled] = useState(false);
@@ -30,8 +28,8 @@ export const RebootOTADialog = (
   const handleSetTime = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.validity.valid) {
       e.preventDefault();
-      return;
-    }
+      return
+    };
 
     const val = e.target.value;
     setInputValue(val);
@@ -75,8 +73,7 @@ export const RebootOTADialog = (
         <DialogHeader>
           <DialogTitle>Reboot to OTA Mode</DialogTitle>
           <DialogDescription>
-            Reboot the connected node after a delay into OTA (Over-the-Air)
-            mode.
+            Reboot the connected node after a delay into OTA (Over-the-Air) mode.
           </DialogDescription>
         </DialogHeader>
 
@@ -92,7 +89,7 @@ export const RebootOTADialog = (
           />
           <Button onClick={() => handleRebootWithTimeout()} className="w-9/12">
             <ClockIcon className="mr-2" size={18} />
-            {isScheduled ? "Reboot has been scheduled" : "Schedule Reboot"}
+            {isScheduled ? 'Reboot has been scheduled' : 'Schedule Reboot'}
           </Button>
         </div>
 
@@ -104,3 +101,4 @@ export const RebootOTADialog = (
     </Dialog>
   );
 };
+

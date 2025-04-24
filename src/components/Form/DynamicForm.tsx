@@ -15,6 +15,7 @@ import {
 } from "react-hook-form";
 import { Heading } from "@components/UI/Typography/Heading.tsx";
 
+
 interface DisabledBy<T> {
   fieldName: Path<T>;
   selector?: number;
@@ -123,9 +124,7 @@ export function DynamicForm<T extends FieldValues>({
           })}
         </div>
       ))}
-      {hasSubmitButton && (
-        <Button type="submit" variant="outline">Submit</Button>
-      )}
+      {hasSubmitButton && <Button type="submit" variant="outline">Submit</Button>}
     </form>
   );
 }

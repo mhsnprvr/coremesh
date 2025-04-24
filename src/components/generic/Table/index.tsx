@@ -17,11 +17,11 @@ export interface Heading {
  * @returns number of hopsAway or `0` if hopsAway is 'Direct'
  */
 function numericHops(hopsAway: string): number {
-  if (hopsAway.match(/direct/i)) {
+  if(hopsAway.match(/direct/i)){
     return 0;
   }
-  if (hopsAway.match(/\d+\s+hop/gi)) {
-    return Number(hopsAway.match(/(\d+)\s+hop/i)?.[1]);
+  if ( hopsAway.match(/\d+\s+hop/gi) ) {
+    return Number( hopsAway.match(/(\d+)\s+hop/i)?.[1] );
   }
   return Number.MAX_SAFE_INTEGER;
 }
@@ -62,13 +62,9 @@ export const Table = ({ headings, rows }: TableProps) => {
 
     // Custom comparison for 'Connection' column
     if (sortColumn === "Connection") {
-      const aNumHops = numericHops(
-        aValue instanceof Array ? aValue[0] : aValue,
-      );
-      const bNumHops = numericHops(
-        bValue instanceof Array ? bValue[0] : bValue,
-      );
-
+      const aNumHops = numericHops(aValue instanceof Array ? aValue[0] : aValue);
+      const bNumHops = numericHops(bValue instanceof Array ? bValue[0] : bValue);
+      
       if (aNumHops < bNumHops) {
         return sortOrder === "asc" ? -1 : 1;
       }
@@ -118,33 +114,22 @@ export const Table = ({ headings, rows }: TableProps) => {
       <tbody>
         {sortedRows.map((row, index) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: TODO: Once this table is sortable, this should get fixed.
-          <tr
-            key={index}
-            className={`${
-              index % 2
-                ? "bg-white dark:bg-white/2"
-                : "bg-slate-50/50 dark:bg-slate-50/5"
-            } border-b-1 border-slate-200 dark:border-slate-900`}
-          >
+          <tr key={index} className={`${index % 2 ? 'bg-white dark:bg-white/2' : 'bg-slate-50/50 dark:bg-slate-50/5'} border-b-1 border-slate-200 dark:border-slate-900`}>
             {row.map((item, index) => (
-              index === 0
-                ? (
-                  <th
-                    key={item.key ?? index}
-                    className="whitespace-nowrap py-2 text-sm text-text-secondary first:pl-2"
-                    scope="row"
-                  >
-                    {item}
-                  </th>
-                )
-                : (
-                  <td
-                    key={item.key ?? index}
-                    className="whitespace-nowrap py-2 text-sm text-text-secondary first:pl-2"
-                  >
-                    {item}
-                  </td>
-                )
+               index === 0 ?
+               <th 
+                 key={item.key ?? index}
+                 className="whitespace-nowrap py-2 text-sm text-text-secondary first:pl-2"
+                 scope="row"
+               >
+                 {item}
+               </th> :
+              <td
+                key={item.key ?? index}
+                className="whitespace-nowrap py-2 text-sm text-text-secondary first:pl-2"
+              >
+                {item}
+              </td>
             ))}
           </tr>
         ))}

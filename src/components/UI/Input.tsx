@@ -18,7 +18,7 @@ const inputVariants = cva(
     defaultVariants: {
       variant: "default",
     },
-  },
+  }
 );
 
 type InputActionType = {
@@ -30,9 +30,8 @@ type InputActionType = {
 };
 
 export interface InputProps
-  extends
-    Omit<React.InputHTMLAttributes<HTMLInputElement>, "prefix" | "suffix">,
-    VariantProps<typeof inputVariants> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "prefix" | "suffix">,
+  VariantProps<typeof inputVariants> {
   prefix?: React.ReactNode;
   suffix?: React.ReactNode;
   showPasswordToggle?: boolean;
@@ -54,7 +53,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       value,
       ...props
     },
-    ref,
+    ref
   ) => {
     const { isVisible, toggleVisibility } = usePasswordVisibilityToggle();
     const { copy, isCopied } = useCopyToClipboard({ timeout: 1500 });
@@ -88,9 +87,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       });
     }
 
-    const inputType = showPasswordToggle
-      ? (isVisible ? "text" : "password")
-      : type;
+    const inputType = showPasswordToggle ? (isVisible ? "text" : "password") : type;
 
     const hasPrefix = !!prefix;
     const hasSuffix = !!suffix;
@@ -100,13 +97,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       inputVariants({ variant }),
       hasPrefix && "rounded-l-none",
       (hasSuffix || hasActions) && "rounded-r-none border-r-0",
-      className,
+      className
     );
 
+
     return (
-      <div
-        className={cn("relative flex w-full items-stretch", containerClassName)}
-      >
+      <div className={cn("relative flex w-full items-stretch", containerClassName)}>
         {prefix && (
           <span className="inline-flex items-center rounded-l-md border  border-slate-300 bg-slate-100/80 px-3 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-700 dark:text-slate-300">
             {prefix}
@@ -122,39 +118,30 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         />
 
         {(hasSuffix || hasActions) && (
-          <div
-            className={cn(
-              "flex items-stretch",
-              !hasSuffix && hasActions &&
-                "border-y border-r border-slate-300 dark:border-slate-700 rounded-r-md",
-            )}
-          >
+          <div className={cn(
+            "flex items-stretch",
+            !hasSuffix && hasActions && "border-y border-r border-slate-300 dark:border-slate-700 rounded-r-md"
+          )}>
             {suffix && (
-              <span
-                className={cn(
-                  "inline-flex items-center border border-slate-300 bg-slate-100/80 px-3 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-700 dark:text-slate-300",
-                  !hasActions && "rounded-r-md",
-                )}
-              >
+              <span className={cn(
+                "inline-flex items-center border border-slate-300 bg-slate-100/80 px-3 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-700 dark:text-slate-300",
+                !hasActions && "rounded-r-md"
+              )}>
                 {suffix}
               </span>
             )}
             {actions.length > 0 && (
-              <div
-                className={cn(
-                  "flex h-full items-center divide-x divide-slate-300 dark:divide-slate-700",
-                  !hasSuffix &&
-                    "border-l border-slate-300 dark:border-slate-700",
-                )}
-              >
+              <div className={cn(
+                "flex h-full items-center divide-x divide-slate-300 dark:divide-slate-700",
+                !hasSuffix && "border-l border-slate-300 dark:border-slate-700"
+              )}>
                 {actions?.map((action) => (
                   <button
                     key={action.id}
                     type="button"
                     className={cn(
                       "inline-flex h-full items-center justify-center px-2.5 text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-400 focus:ring-offset-0 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200 dark:focus:ring-slate-500",
-                      action.id === "copy-value" && isCopied &&
-                        "text-green-600 dark:text-green-500",
+                      action.id === 'copy-value' && isCopied && "text-green-600 dark:text-green-500"
                     )}
                     onClick={action.onClick}
                     aria-label={action.ariaLabel}
@@ -169,7 +156,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
       </div>
     );
-  },
+  }
 );
 Input.displayName = "Input";
 

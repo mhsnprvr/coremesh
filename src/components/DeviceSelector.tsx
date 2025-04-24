@@ -43,7 +43,7 @@ export const DeviceSelector = () => {
       create(Protobuf.Mesh.MyNodeInfoSchema, {
         myNodeNum: mockDeviceId,
         rebootCount: 1,
-      }),
+      })
     );
     mockDevice.addNodeInfo(
       create(Protobuf.Mesh.NodeInfoSchema, {
@@ -63,7 +63,7 @@ export const DeviceSelector = () => {
         },
         lastHeard: Math.floor(Date.now() / 1000),
         deviceMetrics: {},
-      }),
+      })
     );
     // Add mock channel (optional)
     mockDevice.addChannel(
@@ -71,7 +71,7 @@ export const DeviceSelector = () => {
         index: 0,
         settings: { name: "Mock Primary", psk: new Uint8Array([1]) }, // Simplified
         role: Protobuf.Channel.Channel_Role.PRIMARY,
-      }),
+      })
     );
 
     setSelectedDevice(mockDeviceId);
@@ -99,9 +99,11 @@ export const DeviceSelector = () => {
               active={selectedDevice === device.id}
             >
               <Avatar
-                text={device.nodes
-                  .get(device.hardware.myNodeNum)
-                  ?.user?.shortName.toString() ?? "UNK"}
+                text={
+                  device.nodes
+                    .get(device.hardware.myNodeNum)
+                    ?.user?.shortName.toString() ?? "UNK"
+                }
               />
             </DeviceSelectorButton>
           ))}
@@ -138,11 +140,9 @@ export const DeviceSelector = () => {
           <SearchIcon />
         </button>
         {/* TODO: This is being commented out until its fixed */}
-        {
-          /* <button type="button" className="transition-all hover:text-accent">
+        {/* <button type="button" className="transition-all hover:text-accent">
                  <LanguagesIcon />
-               </button> */
-        }
+               </button> */}
         <Separator />
         <Code>{import.meta.env.VITE_COMMIT_HASH}</Code>
       </div>

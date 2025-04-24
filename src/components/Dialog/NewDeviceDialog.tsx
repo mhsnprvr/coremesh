@@ -64,7 +64,7 @@ const ErrorMessage = ({ missingFeatures }: FeatureErrorProps) => {
   if (missingFeatures.length === 0) return null;
 
   const browserFeatures = missingFeatures.filter(
-    (feature) => feature !== "Secure Context",
+    (feature) => feature !== "Secure Context"
   );
   const needsSecureContext = missingFeatures.includes("Secure Context");
 
@@ -98,8 +98,7 @@ const ErrorMessage = ({ missingFeatures }: FeatureErrorProps) => {
             {needsSecureContext && (
               <>
                 {browserFeatures.length > 0 && " Additionally, it"}
-                {browserFeatures.length === 0 && "This application"} requires a
-                {" "}
+                {browserFeatures.length === 0 && "This application"} requires a{" "}
                 <Link href={links["Secure Context"]}>secure context</Link>.
                 Please connect using HTTPS or localhost.
               </>
@@ -124,14 +123,16 @@ export const NewDeviceDialog = ({ open, onOpenChange }: NewDeviceProps) => {
     {
       label: "Bluetooth",
       element: BLE,
-      isDisabled: unsupported.includes("Web Bluetooth") ||
+      isDisabled:
+        unsupported.includes("Web Bluetooth") ||
         unsupported.includes("Secure Context") ||
         connectionInProgress,
     },
     {
       label: "Serial",
       element: Serial,
-      isDisabled: unsupported.includes("Web Serial") ||
+      isDisabled:
+        unsupported.includes("Web Serial") ||
         unsupported.includes("Secure Context") ||
         connectionInProgress,
     },
@@ -155,9 +156,9 @@ export const NewDeviceDialog = ({ open, onOpenChange }: NewDeviceProps) => {
           {tabs.map((tab) => (
             <TabsContent key={tab.label} value={tab.label}>
               <fieldset disabled={tab.isDisabled}>
-                {tab.isDisabled
-                  ? <ErrorMessage missingFeatures={unsupported} />
-                  : null}
+                {tab.isDisabled ? (
+                  <ErrorMessage missingFeatures={unsupported} />
+                ) : null}
                 <tab.element
                   closeDialog={() => onOpenChange(false)}
                   setConnectionInProgress={setConnectionInProgress}

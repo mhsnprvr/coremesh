@@ -17,10 +17,8 @@ import {
   FactoryIcon,
   LayersIcon,
   LinkIcon,
-  type LucideIcon,
   MapIcon,
   MessageSquareIcon,
-  Pin,
   PlusIcon,
   PowerIcon,
   QrCodeIcon,
@@ -29,6 +27,8 @@ import {
   SmartphoneIcon,
   TrashIcon,
   UsersIcon,
+  Pin,
+  type LucideIcon,
 } from "lucide-react";
 import { useEffect } from "react";
 import { Avatar } from "@components/UI/Avatar.tsx";
@@ -61,9 +61,7 @@ export const CommandPalette = () => {
   } = useAppStore();
   const { getDevices } = useDeviceStore();
   const { setDialogOpen, setActivePage, connection } = useDevice();
-  const { pinnedItems, togglePinnedItem } = usePinnedItems({
-    storageName: "pinnedCommandMenuGroups",
-  });
+  const { pinnedItems, togglePinnedItem } = usePinnedItems({ storageName: 'pinnedCommandMenuGroups' });
 
   const groups: Group[] = [
     {
@@ -118,12 +116,13 @@ export const CommandPalette = () => {
           subItems: getDevices().map((device) => ({
             label:
               device.nodes.get(device.hardware.myNodeNum)?.user?.longName ??
-                device.hardware.myNodeNum.toString(),
+              device.hardware.myNodeNum.toString(),
             icon: (
               <Avatar
-                text={device.nodes.get(device.hardware.myNodeNum)?.user
-                  ?.shortName ??
-                  device.hardware.myNodeNum.toString()}
+                text={
+                  device.nodes.get(device.hardware.myNodeNum)?.user?.shortName ??
+                  device.hardware.myNodeNum.toString()
+                }
               />
             ),
             action() {
@@ -249,10 +248,7 @@ export const CommandPalette = () => {
   }, [setCommandPaletteOpen]);
 
   return (
-    <CommandDialog
-      open={commandPaletteOpen}
-      onOpenChange={setCommandPaletteOpen}
-    >
+    <CommandDialog open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen}>
       <CommandInput placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
@@ -266,11 +262,13 @@ export const CommandPalette = () => {
                   type="button"
                   onClick={() => togglePinnedItem(group.label)}
                   className={cn(
-                    "transition-all duration-300 scale-100 cursor-pointer m-0.5 p-2 focus:*:data-label:opacity-100",
+                    "transition-all duration-300 scale-100 cursor-pointer m-0.5 p-2 focus:*:data-label:opacity-100"
                   )}
-                  aria-description={pinnedItems.includes(group.label)
-                    ? "Unpin command group"
-                    : "Pin command group"}
+                  aria-description={
+                    pinnedItems.includes(group.label)
+                      ? "Unpin command group"
+                      : "Pin command group"
+                  }
                 >
                   <span
                     data-label
@@ -282,7 +280,7 @@ export const CommandPalette = () => {
                       "transition-opacity",
                       pinnedItems.includes(group.label)
                         ? "opacity-100 text-red-500"
-                        : "opacity-40 hover:opacity-70",
+                        : "opacity-40 hover:opacity-70"
                     )}
                   />
                 </button>

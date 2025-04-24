@@ -13,14 +13,14 @@ import MapGl, {
   AttributionControl,
   GeolocateControl,
   Layer,
-  type MapLayerMouseEvent,
-  type MapLayerTouchEvent,
   Marker,
   NavigationControl,
   Popup,
   ScaleControl,
   Source,
   useMap,
+  type MapLayerMouseEvent,
+  type MapLayerTouchEvent,
 } from "react-map-gl/maplibre";
 import { NodeDetail } from "../../components/PageComponents/Map/NodeDetail.tsx";
 import { Avatar } from "../../components/UI/Avatar.tsx";
@@ -46,31 +46,28 @@ const MapPage = () => {
   const { userPosition, setUserPosition } = useAppStore();
   const longPressTimeoutRef = useRef<number | null>(null);
   const touchStartPositionRef = useRef<{ lng: number; lat: number } | null>(
-    null,
+    null
   );
 
   const darkMode = theme === "dark";
   const [locationError, setLocationError] = useState<string | null>(null);
 
-  const [selectedNode, setSelectedNode] = useState<
-    Protobuf.Mesh.NodeInfo | null
-  >(null);
+  const [selectedNode, setSelectedNode] =
+    useState<Protobuf.Mesh.NodeInfo | null>(null);
   const [pigeonDialogOpen, setPigeonDialogOpen] = useState(false);
-  const [pigeonCoordinates, setPigeonCoordinates] = useState<
-    {
-      lng: number;
-      lat: number;
-    } | null
-  >(null);
+  const [pigeonCoordinates, setPigeonCoordinates] = useState<{
+    lng: number;
+    lat: number;
+  } | null>(null);
 
   // Filter out nodes without a valid position
   const validNodes = useMemo(
     () =>
       Array.from(nodes.values()).filter(
         (node): node is Protobuf.Mesh.NodeInfo =>
-          Boolean(node.position?.latitudeI),
+          Boolean(node.position?.latitudeI)
       ),
-    [nodes],
+    [nodes]
   );
 
   const {
@@ -114,7 +111,7 @@ const MapPage = () => {
               setUserPosition(defaultMockPosition);
               console.log(
                 "Using default mock position in development:",
-                defaultMockPosition,
+                defaultMockPosition
               );
             }
           }
@@ -123,7 +120,7 @@ const MapPage = () => {
           enableHighAccuracy: true,
           timeout: 5000,
           maximumAge: 0,
-        },
+        }
       );
     } else {
       setLocationError("Geolocation is not supported by your browser");
@@ -133,7 +130,7 @@ const MapPage = () => {
         setUserPosition(defaultMockPosition);
         console.log(
           "Using default mock position in development:",
-          defaultMockPosition,
+          defaultMockPosition
         );
       }
     }
@@ -169,7 +166,7 @@ const MapPage = () => {
         });
       }
     },
-    [map],
+    [map]
   );
 
   // Handle right-click/long-press on map
@@ -234,7 +231,7 @@ const MapPage = () => {
       validNodes.map((n) => [
         (n.position?.latitudeI ?? 0) / 1e7,
         (n.position?.longitudeI ?? 0) / 1e7,
-      ]),
+      ])
     );
     const bounds = bbox(line);
     const center = map.cameraForBounds(
@@ -242,7 +239,7 @@ const MapPage = () => {
         [bounds[1], bounds[0]],
         [bounds[3], bounds[2]],
       ],
-      { padding: { top: 10, bottom: 10, left: 10, right: 10 } },
+      { padding: { top: 10, bottom: 10, left: 10, right: 10 } }
     );
     if (center) {
       map.easeTo(center);
@@ -269,7 +266,7 @@ const MapPage = () => {
           </Marker>
         );
       }),
-    [filteredNodes, handleMarkerClick],
+    [filteredNodes, handleMarkerClick]
   );
 
   useEffect(() => {
@@ -391,18 +388,16 @@ const MapPage = () => {
             </Marker>
           ))}
           {markers}
-          {selectedNode
-            ? (
-              <Popup
-                anchor="top"
-                longitude={convertToLatLng(selectedNode.position).longitude}
-                latitude={convertToLatLng(selectedNode.position).latitude}
-                onClose={() => setSelectedNode(null)}
-              >
-                <NodeDetail node={selectedNode} />
-              </Popup>
-            )
-            : null}
+          {selectedNode ? (
+            <Popup
+              anchor="top"
+              longitude={convertToLatLng(selectedNode.position).longitude}
+              latitude={convertToLatLng(selectedNode.position).latitude}
+              onClose={() => setSelectedNode(null)}
+            >
+              <NodeDetail node={selectedNode} />
+            </Popup>
+          ) : null}
         </MapGl>
 
         <FilterControl

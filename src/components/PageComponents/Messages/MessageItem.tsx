@@ -28,38 +28,15 @@ interface MessageStatus {
 }
 
 const MESSAGE_STATUS: Record<MessageState, MessageStatus> = {
-  [MessageState.Ack]: {
-    state: MessageState.Ack,
-    displayText: "Message delivered",
-    icon: CheckCircle2,
-    ariaLabel: "Message delivered",
-  },
-  [MessageState.Waiting]: {
-    state: MessageState.Waiting,
-    displayText: "Waiting for delivery",
-    icon: CircleEllipsis,
-    ariaLabel: "Sending message",
-  },
-  [MessageState.Failed]: {
-    state: MessageState.Failed,
-    displayText: "Delivery failed",
-    icon: AlertCircle,
-    ariaLabel: "Message delivery failed",
-  },
+  [MessageState.Ack]: { state: MessageState.Ack, displayText: "Message delivered", icon: CheckCircle2, ariaLabel: "Message delivered" },
+  [MessageState.Waiting]: { state: MessageState.Waiting, displayText: "Waiting for delivery", icon: CircleEllipsis, ariaLabel: "Sending message" },
+  [MessageState.Failed]: { state: MessageState.Failed, displayText: "Delivery failed", icon: AlertCircle, ariaLabel: "Message delivery failed" },
 };
 
 const getMessageStatus = (state: MessageState): MessageStatus =>
-  MESSAGE_STATUS[state] ??
-    {
-      state: MessageState.Failed,
-      displayText: "Unknown state",
-      icon: AlertCircle,
-      ariaLabel: "Message status unknown",
-    };
+  MESSAGE_STATUS[state] ?? { state: MessageState.Failed, displayText: "Unknown state", icon: AlertCircle, ariaLabel: "Message status unknown" };
 
-const StatusTooltip = (
-  { status, children }: { status: MessageStatus; children: ReactNode },
-) => (
+const StatusTooltip = ({ status, children }: { status: MessageStatus; children: ReactNode }) => (
   <TooltipProvider delayDuration={300}>
     <Tooltip>
       <TooltipTrigger asChild>{children}</TooltipTrigger>
@@ -71,9 +48,7 @@ const StatusTooltip = (
   </TooltipProvider>
 );
 
-const StatusIcon = (
-  { status, className }: { status: MessageStatus; className?: string },
-) => {
+const StatusIcon = ({ status, className }: { status: MessageStatus; className?: string }) => {
   const Icon = status.icon;
   const iconClass = cn("w-3.5 h-3.5 shrink-0", className);
   return (
@@ -85,25 +60,11 @@ const StatusIcon = (
   );
 };
 
-const TimeDisplay = (
-  { date, className }: { date: number; className?: string },
-) => {
+const TimeDisplay = ({ date, className }: { date: number; className?: string }) => {
   const _date = useMemo(() => new Date(date), [date]);
-  const locale = "en-US"; // TODO: Make dynamic
-  const formattedTime = useMemo(
-    () =>
-      _date.toLocaleTimeString(locale, {
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-      }),
-    [_date, locale],
-  );
-  const fullDate = useMemo(
-    () =>
-      _date.toLocaleString(locale, { dateStyle: "medium", timeStyle: "short" }),
-    [_date, locale],
-  );
+  const locale = 'en-US'; // TODO: Make dynamic
+  const formattedTime = useMemo(() => _date.toLocaleTimeString(locale, { hour: 'numeric', minute: '2-digit', hour12: true }), [_date, locale]);
+  const fullDate = useMemo(() => _date.toLocaleString(locale, { dateStyle: 'medium', timeStyle: 'short' }), [_date, locale]);
 
   return (
     <time dateTime={_date.toISOString()} className={cn("text-xs", className)}>
@@ -128,7 +89,7 @@ export const MessageItem = ({ message }: MessageProps) => {
   }, [getDevices, message.from]);
 
   const { shortName, displayName } = useMemo(() => {
-    const fallbackName = message.from;
+    const fallbackName = message.from
     const longName = messageUser?.user?.longName;
     const shortName = messageUser?.user?.shortName ?? fallbackName;
     const displayName = longName || fallbackName;
@@ -159,33 +120,26 @@ export const MessageItem = ({ message }: MessageProps) => {
   return (
     <li className={messageItemWrapperClass}>
       <div className={cn("grid grid-cols-[auto_1fr]", gridGapClass)}>
-        <Avatar
-          size="sm"
-          text={shortName}
-          className={cn(avatarSizeClass, "pt-0.5")}
-        />
+        <Avatar size="sm" text={shortName} className={cn(avatarSizeClass, "pt-0.5")} />
 
         <div className="flex flex-col gap-1.5 min-w-0">
-          {messageDate != null
-            ? (
-              <div className="flex items-center gap-1.5">
-                <span className={nameTextStyle} aria-hidden="true">
-                  {displayName}
-                </span>
-                <TimeDisplay date={messageDate} className={dateTextStyle} />
-                <StatusIcon
-                  status={messageStatus}
-                  className={cn(
-                    isFailed ? statusIconFailedColor : statusIconBaseColor,
-                  )}
-                />
-              </div>
-            )
-            : null}
+          {messageDate != null ? (
+            <div className="flex items-center gap-1.5">
+              <span className={nameTextStyle} aria-hidden="true">
+                {displayName}
+              </span>
+              <TimeDisplay date={messageDate} className={dateTextStyle} />
+              <StatusIcon
+                status={messageStatus}
+                className={cn(isFailed ? statusIconFailedColor : statusIconBaseColor)}
+              />
+            </div>
+          ) : null}
 
           <div className={cn(baseTextStyle, "whitespace-pre-wrap")}>
             {messageText}
           </div>
+
         </div>
       </div>
       <MessageActionsMenu

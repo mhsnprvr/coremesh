@@ -1,9 +1,0 @@
-[build]
-command = "deno task build"
-publish = "dist"
-
-[build.environment]
-DENO_VERSION = "1.40.0"
-
-[[plugins]]
-package = "netlify-plugin-deno"

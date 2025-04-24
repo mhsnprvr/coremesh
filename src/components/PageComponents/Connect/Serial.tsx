@@ -10,12 +10,10 @@ import { TransportWebSerial } from "@meshtastic/transport-web-serial";
 import { useCallback, useEffect, useState } from "react";
 import { useMessageStore } from "@core/stores/messageStore.ts";
 
-export const Serial = (
-  { setConnectionInProgress, closeDialog }: TabElementProps,
-) => {
+export const Serial = ({ setConnectionInProgress, closeDialog }: TabElementProps) => {
   const [serialPorts, setSerialPorts] = useState<SerialPort[]>([]);
   const { addDevice } = useDeviceStore();
-  const messageStore = useMessageStore();
+  const messageStore = useMessageStore()
   const { setSelectedDevice } = useAppStore();
 
   const updateSerialPortList = useCallback(async () => {
@@ -60,9 +58,8 @@ export const Serial = (
                 await onConnect(port);
               }}
             >
-              {`# ${index} - ${usbVendorId ?? "UNK"} - ${
-                usbProductId ?? "UNK"
-              }`}
+              {`# ${index} - ${usbVendorId ?? "UNK"} - ${usbProductId ?? "UNK"
+                }`}
             </Button>
           );
         })}

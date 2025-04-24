@@ -35,23 +35,21 @@ export const App = (): JSX.Element => {
           <div className="flex grow">
             <DeviceSelector />
             <div className="flex grow flex-col">
-              {device
-                ? (
-                  <div className="flex h-screen w-full">
-                    <DialogManager />
-                    {/* <KeyBackupReminder /> */}
-                    <CommandPalette />
-                    <MapProvider>
-                      <PageRouter />
-                    </MapProvider>
-                  </div>
-                )
-                : (
-                  <>
-                    <Dashboard />
-                    <Footer />
-                  </>
-                )}
+              {device ? (
+                <div className="flex h-screen w-full">
+                  <DialogManager />
+                  {/* <KeyBackupReminder /> */}
+                  <CommandPalette />
+                  <MapProvider>
+                    <PageRouter />
+                  </MapProvider>
+                </div>
+              ) : (
+                <>
+                  <Dashboard />
+                  <Footer />
+                </>
+              )}
             </div>
           </div>
         </div>

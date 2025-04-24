@@ -1,4 +1,4 @@
-import { act, renderHook } from "@testing-library/react";
+import { renderHook, act } from "@testing-library/react";
 import { useRefreshKeysDialog } from "./useRefreshKeysDialog.ts";
 import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { useDevice } from "@core/stores/deviceStore.ts";

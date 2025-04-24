@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from "react";
+import { useState, useEffect, useId } from "react";
 import { Check } from "lucide-react";
 import { Label } from "@components/UI/Label.tsx";
 import { cn } from "@core/utils/cn.ts";
@@ -65,10 +65,8 @@ export function Checkbox({
             role="presentation"
             className={cn(
               "w-6 h-6 border-2 border-gray-500 rounded-md flex items-center justify-center",
-              disabled
-                ? "opacity-50 cursor-not-allowed"
-                : "cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
-              isChecked ? "" : "",
+              disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+              isChecked ? "" : ""
             )}
           >
             {isChecked && (
@@ -87,7 +85,7 @@ export function Checkbox({
               className={cn(
                 "text-gray-900 dark:text-gray-900",
                 disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
-                labelClassName,
+                labelClassName
               )}
             >
               {children}

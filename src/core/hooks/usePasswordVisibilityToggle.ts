@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState, useCallback } from 'react';
 
 interface UsePasswordVisibilityToggleProps {
   initialVisible?: boolean;
@@ -6,16 +6,14 @@ interface UsePasswordVisibilityToggleProps {
 /**
  * Manages the state for toggling password visibility.
  *
- * @param {boolean} [options.initialVisible=false]
- * @returns {{isVisible: boolean, toggleVisibility: () => void}}
+ * @param {boolean} [options.initialVisible=false] 
+ * @returns {{isVisible: boolean, toggleVisibility: () => void}} 
  */
-export function usePasswordVisibilityToggle(
-  { initialVisible = false }: UsePasswordVisibilityToggleProps = {},
-) {
+export function usePasswordVisibilityToggle({ initialVisible = false }: UsePasswordVisibilityToggleProps = {}) {
   const [isVisible, setIsVisible] = useState<boolean>(initialVisible);
 
   const toggleVisibility = useCallback(() => {
-    setIsVisible((prev) => !prev);
+    setIsVisible(prev => !prev);
   }, []);
 
   return { isVisible, toggleVisibility };

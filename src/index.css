@@ -71,6 +71,7 @@
 }
 
 @layer base {
+
   *,
   ::after,
   ::before,
@@ -111,6 +112,7 @@
 img {
   -webkit-user-drag: none;
 }
+
 
 @keyframes spin-slower {
   to {

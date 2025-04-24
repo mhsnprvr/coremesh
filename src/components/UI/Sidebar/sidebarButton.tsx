@@ -30,10 +30,6 @@ export const SidebarButton = ({
     {Icon && <Icon size={16} />}
     {children && children}
     <span className="flex flex-1 justify-start shrink-0">{label}</span>
-    {count && count > 0 && !active && (
-      <div className="justify-end text-white rounded-[20%] px-[2%] bg-[rgb(195,0,0)]">
-        {count}
-      </div>
-    )}
+    {count && count > 0 && !active && <div className="justify-end text-white rounded-[20%] px-[2%] bg-[rgb(195,0,0)]">{count}</div>}
   </Button>
 );
