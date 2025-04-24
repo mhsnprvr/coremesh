@@ -16,16 +16,6 @@
     "preview": "deno run -A npm:vite preview",
     "package": "gzipper c -i html,js,css,png,ico,svg,webmanifest,txt dist dist/output && tar -cvf dist/build.tar -C ./dist/output/ ."
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/meshtastic/web.git"
-  },
-  "bugs": {
-    "url": "https://github.com/meshtastic/web/issues"
-  },
-  "simple-git-hooks": {
-    "pre-commit": "deno task lint:fix && deno task format"
-  },
   "lint-staged": {
     "*.{ts,tsx}": [
       "deno task lint:fix",
