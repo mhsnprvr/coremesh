@@ -7,13 +7,7 @@
     "@layouts/": "./src/layouts/"
   },
   "compilerOptions": {
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext",
-      "deno.window",
-      "deno.ns"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ESNext", "deno.window", "deno.ns"],
     "jsx": "react-jsx",
     "strict": true,
     "noUnusedLocals": true,
@@ -26,9 +20,8 @@
       "@types/web-bluetooth",
       "@types/w3c-web-serial"
     ],
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "skipLibCheck": true
   },
-  "unstable": [
-    "sloppy-imports"
-  ]
+  "unstable": ["sloppy-imports"]
 }
