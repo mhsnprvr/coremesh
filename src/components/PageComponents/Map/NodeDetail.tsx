@@ -55,10 +55,12 @@ export const NodeDetail = ({ node }: NodeDetailProps) => {
         <div className="flex flex-col items-center gap-2 min-w-6 pt-1">
           <Avatar text={shortName} />
 
-          <div onFocusCapture={(e) => {
-            // Required to prevent DM tooltip auto-appearing on creation
-            e.stopPropagation();
-          }}>
+          <div
+            onFocusCapture={(e) => {
+              // Required to prevent DM tooltip auto-appearing on creation
+              e.stopPropagation();
+            }}
+          >
             {node.user?.publicKey && node.user?.publicKey.length > 0
               ? (
                 <LockIcon
@@ -115,16 +117,17 @@ export const NodeDetail = ({ node }: NodeDetailProps) => {
           {!!node.deviceMetrics?.batteryLevel && (
             <div
               className="flex items-center gap-1 mt-0.5"
-              title={`${node.deviceMetrics?.voltage?.toPrecision(3) ?? "Unknown"
-                } volts`}
+              title={`${
+                node.deviceMetrics?.voltage?.toPrecision(3) ?? "Unknown"
+              } volts`}
             >
               {node.deviceMetrics?.batteryLevel > 100
                 ? <BatteryChargingIcon size={22} />
                 : node.deviceMetrics?.batteryLevel > 80
-                  ? <BatteryFullIcon size={22} />
-                  : node.deviceMetrics?.batteryLevel > 20
-                    ? <BatteryMediumIcon size={22} />
-                    : <BatteryLowIcon size={22} />}
+                ? <BatteryFullIcon size={22} />
+                : node.deviceMetrics?.batteryLevel > 20
+                ? <BatteryMediumIcon size={22} />
+                : <BatteryLowIcon size={22} />}
               <Subtle aria-label="Battery">
                 {node.deviceMetrics?.batteryLevel > 100
                   ? "Charging"

@@ -19,7 +19,9 @@ interface RoutePathProps {
   snr?: number[];
 }
 
-const RoutePath = ({ title, startNode, endNode, path, snr }: RoutePathProps) => {
+const RoutePath = (
+  { title, startNode, endNode, path, snr }: RoutePathProps,
+) => {
   const { nodes } = useDevice();
 
   return (
@@ -29,7 +31,9 @@ const RoutePath = ({ title, startNode, endNode, path, snr }: RoutePathProps) => 
       <p>↓ {snr?.[0] ?? "??"}dB</p>
       {path.map((hop, i) => (
         <span key={nodes.get(hop)?.num ?? hop}>
-          <p>{nodes.get(hop)?.user?.longName ?? `!${numberToHexUnpadded(hop)}`}</p>
+          <p>
+            {nodes.get(hop)?.user?.longName ?? `!${numberToHexUnpadded(hop)}`}
+          </p>
           <p>↓ {snr?.[i + 1] ?? "??"}dB</p>
         </span>
       ))}

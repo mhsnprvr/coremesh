@@ -9,7 +9,8 @@ const Footer = ({ className, ...props }: FooterProps) => {
     <footer
       className={cn("flex mt-auto justify-center p-2", className)}
       {...props}
-    ></footer>
+    >
+    </footer>
   );
 };
 

@@ -49,12 +49,15 @@ export const ImportDialog = ({ open, onOpenChange }: ImportDialogProps) => {
         .padEnd(
           encodedChannelConfig.length +
             ((4 - (encodedChannelConfig.length % 4)) % 4),
-          "="
+          "=",
         )
         .replace(/-/g, "+")
         .replace(/_/g, "/");
       setChannelSet(
-        fromBinary(Protobuf.AppOnly.ChannelSetSchema, toByteArray(paddedString))
+        fromBinary(
+          Protobuf.AppOnly.ChannelSetSchema,
+          toByteArray(paddedString),
+        ),
       );
       setValidUrl(true);
     } catch (_error) {
@@ -68,12 +71,11 @@ export const ImportDialog = ({ open, onOpenChange }: ImportDialogProps) => {
       connection?.setChannel(
         create(Protobuf.Channel.ChannelSchema, {
           index,
-          role:
-            index === 0
-              ? Protobuf.Channel.Channel_Role.PRIMARY
-              : Protobuf.Channel.Channel_Role.SECONDARY,
+          role: index === 0
+            ? Protobuf.Channel.Channel_Role.PRIMARY
+            : Protobuf.Channel.Channel_Role.SECONDARY,
           settings: ch,
-        })
+        }),
       );
     });
 
@@ -84,7 +86,7 @@ export const ImportDialog = ({ open, onOpenChange }: ImportDialogProps) => {
             case: "lora",
             value: channelSet.loraConfig,
           },
-        })
+        }),
       );
     }
   };
@@ -119,21 +121,25 @@ export const ImportDialog = ({ open, onOpenChange }: ImportDialogProps) => {
                     checked={channelSet?.loraConfig?.usePreset ?? true}
                   />
                 </div>
-                {/* <Select
+                {
+                  /* <Select
                   label="Modem Preset"
                   disabled
                   value={channelSet?.loraConfig?.modemPreset}
                 >
                   {renderOptions(Protobuf.Config_LoRaConfig_ModemPreset)}
-                </Select> */}
+                </Select> */
+                }
               </div>
-              {/* <Select
+              {
+                /* <Select
                 label="Region"
                 disabled
                 value={channelSet?.loraConfig?.region}
               >
                 {renderOptions(Protobuf.Config_LoRaConfig_RegionCode)}
-              </Select> */}
+              </Select> */
+              }
 
               <span className="text-md block font-medium text-text-primary">
                 Channels:

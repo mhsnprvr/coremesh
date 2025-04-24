@@ -1,4 +1,4 @@
-import { describe, it, vi, expect, beforeEach, Mock } from "vitest";
+import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { NodeDetailsDialog } from "@components/Dialog/NodeDetailsDialog/NodeDetailsDialog.tsx";
 import { useDevice } from "@core/stores/deviceStore.ts";
@@ -45,14 +45,15 @@ describe("NodeDetailsDialog", () => {
   });
 
   it("renders node details correctly", () => {
-    render(<NodeDetailsDialog open={true} onOpenChange={() => { }} />);
+    render(<NodeDetailsDialog open={true} onOpenChange={() => {}} />);
 
     expect(screen.getByText(/Node Details for Test Node/i)).toBeInTheDocument();
 
     expect(screen.getByText("Node Number: 1234")).toBeInTheDocument();
 
     expect(screen.getByText(/Air TX utilization: 50.12%/i)).toBeInTheDocument();
-    expect(screen.getByText(/Channel utilization: 75.46%/i)).toBeInTheDocument();
+    expect(screen.getByText(/Channel utilization: 75.46%/i))
+      .toBeInTheDocument();
     expect(screen.getByText(/Battery level: 88.79%/i)).toBeInTheDocument();
     expect(screen.getByText(/Voltage: 4.20V/i)).toBeInTheDocument();
     expect(screen.getByText(/Uptime:/i)).toBeInTheDocument();
@@ -67,7 +68,7 @@ describe("NodeDetailsDialog", () => {
       nodes: new Map(),
     });
 
-    render(<NodeDetailsDialog open={true} onOpenChange={() => { }} />);
+    render(<NodeDetailsDialog open={true} onOpenChange={() => {}} />);
     expect(screen.queryByText(/Node Details for/i)).not.toBeInTheDocument();
   });
 });

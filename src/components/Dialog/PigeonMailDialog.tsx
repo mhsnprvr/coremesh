@@ -47,7 +47,7 @@ const pigeonMailSchema = z
     {
       message: "Text message must not exceed 100 bytes",
       path: ["text"],
-    }
+    },
   );
 
 type PigeonMailFormData = z.infer<typeof pigeonMailSchema>;
@@ -68,10 +68,12 @@ export const PigeonMailDialog = ({
   const { connection, hardware, nodes } = useDevice();
   const { userPosition } = useAppStore();
   const [textByteCount, setTextByteCount] = useState(0);
-  const [currentLocation, setCurrentLocation] = useState<{
-    lng: number;
-    lat: number;
-  } | null>(null);
+  const [currentLocation, setCurrentLocation] = useState<
+    {
+      lng: number;
+      lat: number;
+    } | null
+  >(null);
 
   const {
     register,
@@ -220,7 +222,7 @@ export const PigeonMailDialog = ({
       const droneNodeNum = Number.parseInt(data.droneNodeId.substring(1), 16);
       const recipientNodeNum = Number.parseInt(
         data.recipientNodeId.substring(1),
-        16
+        16,
       );
 
       // Log the complete payload information
@@ -246,18 +248,18 @@ export const PigeonMailDialog = ({
         recipientNodeId: dataView.getUint32(1, false),
         longitude: new DataView(payload.buffer.slice(5, 13)).getFloat64(
           0,
-          false
+          false,
         ),
         precision1: dataView.getUint8(13),
         latitude: new DataView(payload.buffer.slice(14, 22)).getFloat64(
           0,
-          false
+          false,
         ),
         precision2: dataView.getUint8(22),
         altitude: dataView.getUint8(23),
         textLength: dataView.getUint8(24),
         text: new TextDecoder().decode(
-          payload.slice(25, 25 + dataView.getUint8(24))
+          payload.slice(25, 25 + dataView.getUint8(24)),
         ),
       };
       console.log("Extracted Data:", extractedData);
@@ -274,7 +276,7 @@ export const PigeonMailDialog = ({
         `!BIN!${base64Payload}`,
         droneNodeNum,
         true, // wantAck
-        data.channel
+        data.channel,
       );
 
       if (messageId !== undefined) {

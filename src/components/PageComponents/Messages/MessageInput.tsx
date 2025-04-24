@@ -27,13 +27,14 @@ export const MessageInput = ({ to, channel, maxBytes }: MessageInputProps) => {
 
   const debouncedSetMessageDraft = useMemo(
     () => debounce((value: string) => setDraft(to, value), 300),
-    [setDraft, to]
+    [setDraft, to],
   );
 
   const calculateBytes = (text: string) => new Blob([text]).size;
 
-  const chatType =
-    to === MessageType.Broadcast ? MessageType.Broadcast : MessageType.Direct;
+  const chatType = to === MessageType.Broadcast
+    ? MessageType.Broadcast
+    : MessageType.Direct;
 
   const sendText = useCallback(
     async (message: string) => {
@@ -42,7 +43,7 @@ export const MessageInput = ({ to, channel, maxBytes }: MessageInputProps) => {
           message,
           to,
           true,
-          channel
+          channel,
         );
         if (messageId !== undefined) {
           setMessageState({
@@ -70,7 +71,7 @@ export const MessageInput = ({ to, channel, maxBytes }: MessageInputProps) => {
         });
       }
     },
-    [channel, connection, setMessageState, to, activeChat, chatType]
+    [channel, connection, setMessageState, to, activeChat, chatType],
   );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

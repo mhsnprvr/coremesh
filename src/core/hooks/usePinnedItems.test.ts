@@ -1,5 +1,5 @@
-import { renderHook, act } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { act, renderHook } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { usePinnedItems } from "./usePinnedItems.ts";
 
 const mockSetPinnedItems = vi.fn();
@@ -45,7 +45,10 @@ describe("usePinnedItems", () => {
   });
 
   it("removes an item if it's already pinned", () => {
-    mockUseLocalStorage.mockReturnValue([["item1", "item2"], mockSetPinnedItems]);
+    mockUseLocalStorage.mockReturnValue([
+      ["item1", "item2"],
+      mockSetPinnedItems,
+    ]);
 
     const { result } = renderHook(() =>
       usePinnedItems({ storageName: "test-storage" })

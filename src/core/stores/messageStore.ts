@@ -58,7 +58,7 @@ export interface MessageStore {
   }) => void;
   getMessages: (
     type: MessageType,
-    options: { myNodeNum: number; otherNodeNum?: number; channel?: number }
+    options: { myNodeNum: number; otherNodeNum?: number; channel?: number },
   ) => Message[];
   getDraft: (key: Types.Destination) => string;
   setDraft: (key: Types.Destination, message: string) => void;
@@ -90,7 +90,7 @@ export const useMessageStore = create<MessageStore>()(
         set(
           produce((state: MessageStore) => {
             state.nodeNum = nodeNum;
-          })
+          }),
         );
       },
       getNodeNum: () => get().nodeNum,
@@ -98,14 +98,14 @@ export const useMessageStore = create<MessageStore>()(
         set(
           produce((state: MessageStore) => {
             state.activeChat = chat;
-          })
+          }),
         );
       },
       setChatType: (type) => {
         set(
           produce((state: MessageStore) => {
             state.chatType = type;
-          })
+          }),
         );
       },
       saveMessage: (message) => {
@@ -130,7 +130,7 @@ export const useMessageStore = create<MessageStore>()(
               }
               state.messages.broadcast[channel][message.messageId] = message;
             }
-          })
+          }),
         );
       },
       setMessageState: ({
@@ -150,14 +150,13 @@ export const useMessageStore = create<MessageStore>()(
               const otherNodeNum = key;
               const myNodeNum = state.nodeNum;
 
-              message =
-                state.messages.direct?.[myNodeNum]?.[otherNodeNum]?.[messageId];
+              message = state.messages.direct?.[myNodeNum]?.[otherNodeNum]
+                ?.[messageId];
 
               if (!message) {
-                message =
-                  state.messages.direct?.[otherNodeNum]?.[myNodeNum]?.[
-                    messageId
-                  ];
+                message = state.messages.direct?.[otherNodeNum]?.[myNodeNum]?.[
+                  messageId
+                ];
               }
             }
 
@@ -165,10 +164,10 @@ export const useMessageStore = create<MessageStore>()(
               message.state = newState;
             } else {
               console.warn(
-                `Message not found for state update - type: ${type}, key (otherNode/channel): ${key}, messageId: ${messageId}, myNodeNum: ${state.nodeNum}`
+                `Message not found for state update - type: ${type}, key (otherNode/channel): ${key}, messageId: ${messageId}, myNodeNum: ${state.nodeNum}`,
               );
             }
-          })
+          }),
         );
       },
       getMessages: (type, options) => {
@@ -230,10 +229,10 @@ export const useMessageStore = create<MessageStore>()(
               }
               console.warn(
                 "clearMessageByMessageId called without sufficient identifiers for type",
-                type
+                type,
               );
             }
-          })
+          }),
         );
       },
       getDraft: (key) => {
@@ -243,14 +242,14 @@ export const useMessageStore = create<MessageStore>()(
         set(
           produce((state: MessageStore) => {
             state.draft.set(key, message);
-          })
+          }),
         );
       },
       clearDraft: (key) => {
         set(
           produce((state: MessageStore) => {
             state.draft.delete(key);
-          })
+          }),
         );
       },
       deleteAllMessages: () => {
@@ -258,7 +257,7 @@ export const useMessageStore = create<MessageStore>()(
           produce((state: MessageStore) => {
             state.messages.direct = {};
             state.messages.broadcast = {};
-          })
+          }),
         );
       },
     }),
@@ -270,6 +269,6 @@ export const useMessageStore = create<MessageStore>()(
         messages: state.messages,
         nodeNum: state.nodeNum,
       }),
-    }
-  )
+    },
+  ),
 );

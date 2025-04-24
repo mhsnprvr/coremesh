@@ -1,5 +1,5 @@
 import { StateStorage } from "zustand/middleware";
-import { get, set, del } from "idb-keyval";
+import { del, get, set } from "idb-keyval";
 
 export const zustandIndexDBStorage: StateStorage = {
   getItem: async (name: string): Promise<string | null> => {

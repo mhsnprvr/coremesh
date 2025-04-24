@@ -35,11 +35,11 @@ export const Network = () => {
                 gateway: convertIpAddressToInt(data.ipv4Config?.gateway ?? ""),
                 subnet: convertIpAddressToInt(data.ipv4Config?.subnet ?? ""),
                 dns: convertIpAddressToInt(data.ipv4Config?.dns ?? ""),
-              }
+              },
             ),
           },
         },
-      })
+      }),
     );
   };
 
@@ -51,15 +51,14 @@ export const Network = () => {
         ipv4Config: {
           ip: convertIntToIpAddress(config.network?.ipv4Config?.ip ?? 0),
           gateway: convertIntToIpAddress(
-            config.network?.ipv4Config?.gateway ?? 0
+            config.network?.ipv4Config?.gateway ?? 0,
           ),
           subnet: convertIntToIpAddress(
-            config.network?.ipv4Config?.subnet ?? 0
+            config.network?.ipv4Config?.subnet ?? 0,
           ),
           dns: convertIntToIpAddress(config.network?.ipv4Config?.dns ?? 0),
         },
-        enabledProtocols:
-          config.network?.enabledProtocols ??
+        enabledProtocols: config.network?.enabledProtocols ??
           Protobuf.Config.Config_NetworkConfig_ProtocolFlags.NO_BROADCAST,
       }}
       fieldGroups={[

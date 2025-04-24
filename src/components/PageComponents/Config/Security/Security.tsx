@@ -1,10 +1,7 @@
 import { PkiRegenerateDialog } from "@components/Dialog/PkiRegenerateDialog.tsx";
 import { DynamicForm } from "@components/Form/DynamicForm.tsx";
 import { useAppStore } from "@core/stores/appStore.ts";
-import {
-  getX25519PrivateKey,
-  getX25519PublicKey,
-} from "@core/utils/x25519.ts";
+import { getX25519PrivateKey, getX25519PublicKey } from "@core/utils/x25519.ts";
 import type { SecurityValidation } from "@app/validation/config/security.ts";
 import { create } from "@bufbuild/protobuf";
 import { useDevice } from "@core/stores/deviceStore.ts";
@@ -58,7 +55,8 @@ export const Security = () => {
       if (input.length % 4 !== 0) {
         addError(
           fieldName,
-          `${fieldName === "privateKey" ? "Private" : "Admin"
+          `${
+            fieldName === "privateKey" ? "Private" : "Admin"
           } Key is required to be a 256 bit pre-shared key (PSK)`,
         );
         return;
@@ -73,7 +71,8 @@ export const Security = () => {
       console.error(e);
       addError(
         fieldName,
-        `Invalid ${fieldName === "privateKey" ? "Private" : "Admin"
+        `Invalid ${
+          fieldName === "privateKey" ? "Private" : "Admin"
         } Key format`,
       );
     }
@@ -242,7 +241,7 @@ export const Security = () => {
                   ? getErrorMessage("adminKey")
                   : "",
                 inputChange: adminKeyInputChangeEvent,
-                selectChange: () => { },
+                selectChange: () => {},
                 bits: [{ text: "256 bit", value: "32", key: "bit256" }],
                 devicePSKBitCount: state.privateKeyBitCount,
                 hide: !state.adminKeyVisible,

@@ -23,10 +23,9 @@ export const ChannelChat = ({
   const scrollToBottom = useCallback(() => {
     const scrollContainer = scrollContainerRef.current;
     if (scrollContainer) {
-      const isNearBottom =
-        scrollContainer.scrollHeight -
-        scrollContainer.scrollTop -
-        scrollContainer.clientHeight <
+      const isNearBottom = scrollContainer.scrollHeight -
+          scrollContainer.scrollTop -
+          scrollContainer.clientHeight <
         100;
 
       if (isNearBottom) {

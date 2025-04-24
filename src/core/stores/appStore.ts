@@ -68,21 +68,21 @@ export const useAppStore = create<AppState>()((set, get) => ({
     set(
       produce<AppState>((draft) => {
         draft.rasterSources = sources;
-      })
+      }),
     );
   },
   addRasterSource: (source: RasterSource) => {
     set(
       produce<AppState>((draft) => {
         draft.rasterSources.push(source);
-      })
+      }),
     );
   },
   removeRasterSource: (index: number) => {
     set(
       produce<AppState>((draft) => {
         draft.rasterSources.splice(index, 1);
-      })
+      }),
     );
   },
   setSelectedDevice: (deviceId) =>
@@ -101,7 +101,7 @@ export const useAppStore = create<AppState>()((set, get) => ({
     set(
       produce<AppState>((draft) => {
         draft.commandPaletteOpen = open;
-      })
+      }),
     );
   },
   setNodeNumToBeRemoved: (nodeNum) =>
@@ -112,7 +112,7 @@ export const useAppStore = create<AppState>()((set, get) => ({
     set(
       produce<AppState>((draft) => {
         draft.connectDialogOpen = open;
-      })
+      }),
     );
   },
   setNodeNumDetails: (nodeNum) =>
@@ -123,14 +123,14 @@ export const useAppStore = create<AppState>()((set, get) => ({
     set(
       produce<AppState>((draft) => {
         draft.showSidebar = show;
-      })
+      }),
     );
   },
   setUserPosition: (position) => {
     set(
       produce<AppState>((draft) => {
         draft.userPosition = position;
-      })
+      }),
     );
   },
   hasErrors: () => {
@@ -152,28 +152,28 @@ export const useAppStore = create<AppState>()((set, get) => ({
           ...draft.errors.filter((e) => e.field !== field),
           { field, message },
         ];
-      })
+      }),
     );
   },
   removeError: (field: string) => {
     set(
       produce<AppState>((draft) => {
         draft.errors = draft.errors.filter((e) => e.field !== field);
-      })
+      }),
     );
   },
   clearErrors: () => {
     set(
       produce<AppState>((draft) => {
         draft.errors = [];
-      })
+      }),
     );
   },
   setNewErrors: (newErrors: ErrorState[]) => {
     set(
       produce<AppState>((draft) => {
         draft.errors = newErrors;
-      })
+      }),
     );
   },
 }));

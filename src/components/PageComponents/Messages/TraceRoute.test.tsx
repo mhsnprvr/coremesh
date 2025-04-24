@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
+import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { TraceRoute } from "@components/PageComponents/Messages/TraceRoute.tsx";
 import { useDevice } from "@core/stores/deviceStore.ts";
@@ -35,7 +35,7 @@ describe("TraceRoute", () => {
         to={{ user: { longName: "Destination Node" } } as any}
         route={[1, 2]}
         snrTowards={[10, 20, 30]}
-      />
+      />,
     );
 
     expect(screen.getByText("Route to destination:")).toBeInTheDocument();
@@ -60,7 +60,7 @@ describe("TraceRoute", () => {
         snrTowards={[15, 25]}
         routeBack={[3]}
         snrBack={[35, 45]}
-      />
+      />,
     );
 
     expect(screen.getByText("Route back:")).toBeInTheDocument();
@@ -75,7 +75,7 @@ describe("TraceRoute", () => {
         from={{ user: { longName: "Source" } } as any}
         to={{ user: { longName: "Dest" } } as any}
         route={[1]}
-      />
+      />,
     );
 
     expect(screen.getAllByText("↓ ??dB").length).toBeGreaterThan(0);
@@ -87,9 +87,9 @@ describe("TraceRoute", () => {
         from={{ user: { longName: "Source" } } as any}
         to={{ user: { longName: "Dest" } } as any}
         route={[99]}
-      />
+      />,
     );
 
-    expect(screen.getByText(/^!63$/)).toBeInTheDocument(); // 99 in hex 
+    expect(screen.getByText(/^!63$/)).toBeInTheDocument(); // 99 in hex
   });
 });

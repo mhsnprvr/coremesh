@@ -42,11 +42,9 @@ export const PageLayout = ({
             className="pl-4 transition-all hover:text-accent"
             onClick={() => setShowSidebar(!showSidebar)}
           >
-            {showSidebar ? (
-              <SidebarCloseIcon size={24} />
-            ) : (
-              <SidebarOpenIcon size={24} />
-            )}
+            {showSidebar
+              ? <SidebarCloseIcon size={24} />
+              : <SidebarOpenIcon size={24} />}
           </button>
           <div className="flex flex-1 items-center justify-between px-4 md:px-0">
             <div className="flex w-full items-center">
@@ -60,9 +58,7 @@ export const PageLayout = ({
                     className="transition-all hover:text-accent"
                     onClick={action.onClick}
                   >
-                    {action?.isLoading ? (
-                      <Spinner />
-                    ) : (
+                    {action?.isLoading ? <Spinner /> : (
                       <action.icon
                         className={action.iconClasses}
                         aria-disabled={action.disabled}
@@ -78,7 +74,7 @@ export const PageLayout = ({
           className={cn(
             "flex h-full w-full flex-col overflow-y-auto",
             !noPadding && "pl-3 pr-3 ",
-            className
+            className,
           )}
         >
           {children}
