@@ -47,6 +47,7 @@ export const DeviceSelector = () => {
         rebootCount: 1,
       })
     );
+
     mockDevice.addNodeInfo(
       create(Protobuf.Mesh.NodeInfoSchema, {
         num: mockDeviceId,
@@ -58,8 +59,8 @@ export const DeviceSelector = () => {
           hwModel: Protobuf.Mesh.HardwareModel.TBEAM,
         },
         position: {
-          latitudeI: userPosition[1] * 1e7,
-          longitudeI: userPosition[0] * 1e7,
+          latitudeI: userPosition[1] * 1e7 + 1000,
+          longitudeI: userPosition[0] * 1e7 + 1600,
           altitude: 30,
           time: Math.floor(Date.now() / 1000),
         },
