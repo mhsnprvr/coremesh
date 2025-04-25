@@ -1,10 +1,14 @@
 import { useAppStore } from "@core/stores/appStore.ts";
 import { useEffect, useState } from "react";
 
+// Default location in Libya (Tripoli coordinates)
+const DEFAULT_LIBYA_LOCATION: [number, number] = [13.1913, 32.8872];
+
 export const UserPositionTracker = (): null => {
   const { setUserPosition, setLocationError } = useAppStore();
   const [permissionStatus, setPermissionStatus] =
     useState<PermissionState | null>(null);
+  const [isFirstError, setIsFirstError] = useState(true);
 
   useEffect(() => {
     let watchId: number | null = null;
@@ -62,6 +66,15 @@ export const UserPositionTracker = (): null => {
       const errorCallback = (error: GeolocationPositionError) => {
         console.error("Error getting location:", error);
         setLocationError(error.message);
+
+        // Set default location in Libya if it's the first error and we're in development mode
+        if (isFirstError && process.env.NODE_ENV === "development") {
+          console.log("Setting default location in Libya for development");
+          setUserPosition(DEFAULT_LIBYA_LOCATION);
+          setLocationError(null);
+          setIsFirstError(false);
+        }
+
         // Only retry if permission is granted
         if (permissionStatus === "granted") {
           retryTimeout = window.setTimeout(updatePosition, 5000);
@@ -119,7 +132,7 @@ export const UserPositionTracker = (): null => {
         window.clearTimeout(retryTimeout);
       }
     };
-  }, [setUserPosition, permissionStatus, setLocationError]);
+  }, [permissionStatus, isFirstError, setUserPosition, setLocationError]);
 
   return null;
 };
