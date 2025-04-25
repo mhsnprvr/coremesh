@@ -1,11 +1,11 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi, Mock } from "vitest";
+import { deviceNameParser } from "@app/core/utils/nameParser.ts";
+import { useDevice } from "@core/stores/deviceStore.ts"; // Import for mocking
+import { useMessageStore } from "@core/stores/messageStore.ts"; // Import for mocking
+import type { Protobuf } from "@meshtastic/core";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { type Mock, beforeEach, describe, expect, it, vi } from "vitest";
 import { RefreshKeysDialog } from "./RefreshKeysDialog.tsx";
 import { useRefreshKeysDialog } from "./useRefreshKeysDialog.ts";
-import { useMessageStore } from "@core/stores/messageStore.ts"; // Import for mocking
-import { useDevice } from "@core/stores/deviceStore.ts"; // Import for mocking
-import { Protobuf } from "@meshtastic/core";
-import { deviceNameParser } from "@app/core/utils/nameParser.ts";
 
 vi.mock("@core/stores/messageStore.ts", () => ({
   useMessageStore: vi.fn(),

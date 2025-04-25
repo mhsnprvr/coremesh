@@ -1,3 +1,6 @@
+import { deviceNameParser } from "@app/core/utils/nameParser";
+import { MessageActionsMenu } from "@components/PageComponents/Messages/MessageActionsMenu.tsx";
+import { Avatar } from "@components/UI/Avatar.tsx";
 import {
   Tooltip,
   TooltipArrow,
@@ -6,15 +9,12 @@ import {
   TooltipTrigger,
 } from "@components/UI/Tooltip.tsx";
 import { useDeviceStore } from "@core/stores/deviceStore.ts";
+import { type Message, MessageState } from "@core/stores/messageStore.ts";
 import { cn } from "@core/utils/cn.ts";
-import { Avatar } from "@components/UI/Avatar.tsx";
-import { AlertCircle, CheckCircle2, CircleEllipsis } from "lucide-react";
+import type { Protobuf } from "@meshtastic/js";
 import type { LucideIcon } from "lucide-react";
-import { ReactNode, useMemo } from "react";
-import { Message, MessageState } from "@core/stores/messageStore.ts";
-import { Protobuf } from "@meshtastic/js";
-import { MessageActionsMenu } from "@components/PageComponents/Messages/MessageActionsMenu.tsx";
-import { deviceNameParser } from "@app/core/utils/nameParser";
+import { AlertCircle, CheckCircle2, CircleEllipsis } from "lucide-react";
+import { type ReactNode, useMemo } from "react";
 
 interface MessageProps {
   message: Message;
@@ -109,12 +109,12 @@ const TimeDisplay = ({
         minute: "2-digit",
         hour12: true,
       }),
-    [_date, locale]
+    [_date]
   );
   const fullDate = useMemo(
     () =>
       _date.toLocaleString(locale, { dateStyle: "medium", timeStyle: "short" }),
-    [_date, locale]
+    [_date]
   );
 
   return (

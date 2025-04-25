@@ -1,13 +1,16 @@
-import { useCallback, useMemo, useState } from "react";
 import type { Protobuf } from "@meshtastic/core";
 import { numberToHexUnpadded } from "@noble/curves/abstract/utils";
+import { useCallback, useMemo, useState } from "react";
 import { deviceNameParser } from "../utils/nameParser";
+
+// Use a specific type for our node objects
+type MeshNode = Protobuf.Mesh.NodeInfo;
 
 interface BooleanFilter {
   key: string;
   label: string;
   type: "boolean";
-  predicate: (node: Node, value: boolean) => boolean;
+  predicate: (node: MeshNode, value: boolean) => boolean;
 }
 
 interface RangeFilter {
@@ -15,14 +18,14 @@ interface RangeFilter {
   label: string;
   type: "range";
   bounds: [number, number];
-  predicate: (node: Node, value: [number, number]) => boolean;
+  predicate: (node: MeshNode, value: [number, number]) => boolean;
 }
 
 interface SearchFilter {
   key: string;
   label: string;
   type: "search";
-  predicate: (node: Node, value: string) => boolean;
+  predicate: (node: MeshNode, value: string) => boolean;
 }
 
 export type FilterConfig = BooleanFilter | RangeFilter | SearchFilter;
@@ -122,7 +125,7 @@ export function useNodeFilters(nodes: Protobuf.Mesh.NodeInfo[]) {
           acc[cfg.key] = false;
           break;
         case "range":
-          acc[cfg.key] = cfg.bounds!;
+          acc[cfg.key] = cfg.bounds;
           break;
         case "search":
           acc[cfg.key] = "";
@@ -148,7 +151,28 @@ export function useNodeFilters(nodes: Protobuf.Mesh.NodeInfo[]) {
   const filteredNodes = useMemo(
     () =>
       nodes.filter((node) =>
-        filterConfigs.every((cfg) => cfg.predicate(node, filters[cfg.key]))
+        filterConfigs.every((cfg) => {
+          // Type-safe way to check and use predicates
+          switch (cfg.type) {
+            case "boolean":
+              return (cfg as BooleanFilter).predicate(
+                node,
+                filters[cfg.key] as boolean
+              );
+            case "range":
+              return (cfg as RangeFilter).predicate(
+                node,
+                filters[cfg.key] as [number, number]
+              );
+            case "search":
+              return (cfg as SearchFilter).predicate(
+                node,
+                filters[cfg.key] as string
+              );
+            default:
+              return true;
+          }
+        })
       ),
     [nodes, filters]
   );

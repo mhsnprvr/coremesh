@@ -1,4 +1,6 @@
 import { deviceNameParser } from "@app/core/utils/nameParser.ts";
+import type { Protobuf, Types } from "@meshtastic/core";
+import { numberToHexUnpadded } from "@noble/curves/abstract/utils";
 import { useDevice } from "../../core/stores/deviceStore.ts";
 import {
   Dialog,
@@ -8,11 +10,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../UI/Dialog.tsx";
-import type { Protobuf, Types } from "@meshtastic/core";
-import { numberToHexUnpadded } from "@noble/curves/abstract/utils";
 
 export interface LocationResponseDialogProps {
-  location: Types.PacketMetadata<Protobuf.Mesh.location> | undefined;
+  location: Types.PacketMetadata<Protobuf.Mesh.Position> | undefined;
   open: boolean;
   onOpenChange: () => void;
 }
