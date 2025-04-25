@@ -1,8 +1,8 @@
 {
-  "name": "coremesh-web",
+  "name": "lunamesh-web",
   "version": "2.6.0-0",
   "type": "module",
-  "description": "CoreMesh web client",
+  "description": "Lunamesh web client",
   "license": "GPL-3.0-only",
   "scripts": {
     "build": "vite build",

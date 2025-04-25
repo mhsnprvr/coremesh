@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from "@components/UI/Dialog.tsx";
 import { Label } from "@components/UI/Label.tsx";
+import { deviceNameParser } from "@app/core/utils/nameParser.ts";
 
 export interface RemoveNodeDialogProps {
   open: boolean;
@@ -42,7 +43,9 @@ export const RemoveNodeDialog = ({
         </DialogHeader>
         <div className="gap-4">
           <form onSubmit={onSubmit}>
-            <Label>{nodes.get(nodeNumToBeRemoved)?.user?.longName}</Label>
+            <Label>
+              {deviceNameParser(nodes.get(nodeNumToBeRemoved)?.user?.longName)}
+            </Label>
           </form>
         </div>
         <DialogFooter>

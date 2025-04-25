@@ -19,6 +19,7 @@ import { numberToHexUnpadded } from "@noble/curves/abstract/utils";
 import { DeviceImage } from "@components/generic/DeviceImage.tsx";
 import { TimeAgo } from "@components/generic/TimeAgo.tsx";
 import { Uptime } from "@components/generic/Uptime.tsx";
+import { deviceNameParser } from "@app/core/utils/nameParser";
 
 export interface NodeDetailsDialogProps {
   open: boolean;
@@ -65,12 +66,13 @@ export const NodeDetailsDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent >
+      <DialogContent>
         <DialogClose />
         <DialogHeader>
           <DialogTitle>
-            Node Details for {device.user?.longName ?? "UNKNOWN"} (
-            {device.user?.shortName ?? "UNK"})
+            Node Details for{" "}
+            {deviceNameParser(device.user?.longName) ?? "UNKNOWN"} (
+            {deviceNameParser(device.user?.shortName) ?? "UNK"})
           </DialogTitle>
         </DialogHeader>
         <DialogFooter>
@@ -94,13 +96,17 @@ export const NodeDetailsDialog = ({
                   Role:{" "}
                   {
                     Protobuf.Config.Config_DeviceConfig_Role[
-                    device.user?.role ?? 0
+                      device.user?.role ?? 0
                     ]
                   }
                 </p>
                 <p>
                   Last Heard:{" "}
-                  {device.lastHeard === 0 ? "Never" : <TimeAgo timestamp={device.lastHeard * 1000} />}
+                  {device.lastHeard === 0 ? (
+                    "Never"
+                  ) : (
+                    <TimeAgo timestamp={device.lastHeard * 1000} />
+                  )}
                 </p>
               </div>
 
@@ -112,9 +118,9 @@ export const NodeDetailsDialog = ({
                       Coordinates:{" "}
                       <a
                         className="text-blue-500 dark:text-blue-400"
-                        href={`https://www.openstreetmap.org/?mlat=${device.position.latitudeI / 1e7
-                          }&mlon=${device.position.longitudeI / 1e7
-                          }&layers=N`}
+                        href={`https://www.openstreetmap.org/?mlat=${
+                          device.position.latitudeI / 1e7
+                        }&mlon=${device.position.longitudeI / 1e7}&layers=N`}
                         target="_blank"
                         rel="noreferrer"
                       >
@@ -150,7 +156,6 @@ export const NodeDetailsDialog = ({
                   )}
                 </div>
               )}
-
             </div>
 
             <div className="text-slate-900 dark:text-slate-100 w-full max-w-[464px] bg-slate-100 dark:bg-slate-800 p-3 rounded-lg mt-3">

@@ -5,7 +5,7 @@ import { useRefreshKeysDialog } from "./useRefreshKeysDialog.ts";
 import { useMessageStore } from "@core/stores/messageStore.ts"; // Import for mocking
 import { useDevice } from "@core/stores/deviceStore.ts"; // Import for mocking
 import { Protobuf } from "@meshtastic/core";
-
+import { deviceNameParser } from "@app/core/utils/nameParser.ts";
 
 vi.mock("@core/stores/messageStore.ts", () => ({
   useMessageStore: vi.fn(),
@@ -51,31 +51,46 @@ describe("RefreshKeysDialog Component", () => {
   it("should render the dialog with dynamic content when open and data is available", () => {
     render(<RefreshKeysDialog open onOpenChange={onOpenChangeMock} />);
 
-    expect(screen.getByText(`Keys Mismatch - ${mockNodeWithError?.user?.longName}`)).toBeInTheDocument();
-    expect(screen.getByText(new RegExp(`${mockNodeWithError?.user?.longName}.*${mockNodeWithError?.user?.shortName}`))).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /request new keys/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /dismiss/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Close/i })).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        `Keys Mismatch - ${deviceNameParser(mockNodeWithError?.user?.longName)}`
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        new RegExp(
+          `${deviceNameParser(
+            mockNodeWithError?.user?.longName
+          )}.*${deviceNameParser(mockNodeWithError?.user?.shortName)}`
+        )
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /request new keys/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /dismiss/i })
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Close/i })).toBeInTheDocument();
   });
 
   it("should call handleNodeRemove when 'Request New Keys' button is clicked", () => {
     render(<RefreshKeysDialog open onOpenChange={onOpenChangeMock} />);
-    fireEvent.click(screen.getByRole('button', { name: /request new keys/i }));
+    fireEvent.click(screen.getByRole("button", { name: /request new keys/i }));
     expect(mockHandleNodeRemove).toHaveBeenCalledTimes(1);
   });
 
   it("should call handleCloseDialog when 'Dismiss' button is clicked", () => {
     render(<RefreshKeysDialog open onOpenChange={onOpenChangeMock} />);
-    fireEvent.click(screen.getByRole('button', { name: /dismiss/i }));
+    fireEvent.click(screen.getByRole("button", { name: /dismiss/i }));
     expect(mockHandleCloseDialog).toHaveBeenCalledTimes(1);
   });
 
   it("should call handleCloseDialog when the explicit DialogClose button is clicked", () => {
     render(<RefreshKeysDialog open onOpenChange={onOpenChangeMock} />);
-    fireEvent.click(screen.getByRole('button', { name: /close/i })); // Use the aria-label
+    fireEvent.click(screen.getByRole("button", { name: /close/i })); // Use the aria-label
     expect(mockHandleCloseDialog).toHaveBeenCalledTimes(1);
   });
-
 
   it("should not render the dialog when open is false", () => {
     render(<RefreshKeysDialog open={false} onOpenChange={onOpenChangeMock} />);
@@ -87,7 +102,9 @@ describe("RefreshKeysDialog Component", () => {
       nodeErrors: new Map(),
       nodes: mockNodes,
     });
-    const { container } = render(<RefreshKeysDialog open onOpenChange={onOpenChangeMock} />);
+    const { container } = render(
+      <RefreshKeysDialog open onOpenChange={onOpenChangeMock} />
+    );
     expect(container.firstChild).toBeNull();
   });
 
@@ -96,7 +113,9 @@ describe("RefreshKeysDialog Component", () => {
       nodeErrors: mockNodeErrors,
       nodes: new Map(),
     });
-    const { container } = render(<RefreshKeysDialog open onOpenChange={onOpenChangeMock} />);
+    const { container } = render(
+      <RefreshKeysDialog open onOpenChange={onOpenChangeMock} />
+    );
     expect(container.firstChild).toBeNull();
   });
 });

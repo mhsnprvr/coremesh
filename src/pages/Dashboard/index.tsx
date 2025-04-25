@@ -1,3 +1,4 @@
+import { deviceNameParser } from "@app/core/utils/nameParser";
 import { ConnectionButton } from "@components/ConnectionButton.tsx";
 import { Separator } from "@components/UI/Seperator.tsx";
 import { Heading } from "@components/UI/Typography/Heading.tsx";
@@ -70,8 +71,10 @@ export const Dashboard = () => {
                     >
                       <div className="flex items-center justify-between">
                         <p className="truncate text-sm font-medium text-accent">
-                          {device.nodes.get(device.hardware.myNodeNum)?.user
-                            ?.longName ?? "UNK"}
+                          {deviceNameParser(
+                            device.nodes.get(device.hardware.myNodeNum)?.user
+                              ?.longName
+                          ) ?? "UNK"}
                         </p>
                         <div className="inline-flex w-24 justify-center gap-2 rounded-full bg-slate-100 py-1 text-xs font-semibold text-slate-900 transition-colors hover:bg-slate-700 hover:text-slate-50">
                           {connType === "ble" && (

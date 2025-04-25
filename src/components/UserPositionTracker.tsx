@@ -1,11 +1,15 @@
 import { useAppStore } from "@core/stores/appStore.ts";
+import { useDeviceStore } from "@core/stores/deviceStore.ts";
 import { useEffect, useState } from "react";
 
 // Default location in Libya (Tripoli coordinates)
 const DEFAULT_LIBYA_LOCATION: [number, number] = [13.1913, 32.8872];
+// Small offset to place user location near but not exactly at the device location
+const LOCATION_OFFSET: [number, number] = [0.0003, 0.0002];
 
 export const UserPositionTracker = (): null => {
-  const { setUserPosition, setLocationError } = useAppStore();
+  const { setUserPosition, setLocationError, selectedDevice } = useAppStore();
+  const deviceStore = useDeviceStore();
   const [permissionStatus, setPermissionStatus] =
     useState<PermissionState | null>(null);
   const [isFirstError, setIsFirstError] = useState(true);
@@ -13,7 +17,7 @@ export const UserPositionTracker = (): null => {
   useEffect(() => {
     let watchId: number | null = null;
     let retryTimeout: number | null = null;
-
+    const isDevelopment = process.env.NODE_ENV === "development";
     const checkAndRequestPermission = async () => {
       try {
         // Check if the Permissions API is available
@@ -67,12 +71,46 @@ export const UserPositionTracker = (): null => {
         console.error("Error getting location:", error);
         setLocationError(error.message);
 
-        // Set default location in Libya if it's the first error and we're in development mode
-        if (isFirstError && process.env.NODE_ENV === "development") {
-          console.log("Setting default location in Libya for development");
-          setUserPosition(DEFAULT_LIBYA_LOCATION);
-          setLocationError(null);
-          setIsFirstError(false);
+        // Handle the error based on development environment and first occurrence
+        if (isFirstError) {
+          if (selectedDevice && selectedDevice !== 0 && isDevelopment) {
+            // Try to get the selected device's position
+            const device = deviceStore.getDevice(selectedDevice);
+            if (device?.nodes) {
+              // Get the device's own node (hardware.myNodeNum)
+              const myNodeNum = device.hardware?.myNodeNum;
+              if (myNodeNum !== undefined && device.nodes.has(myNodeNum)) {
+                const nodeInfo = device.nodes.get(myNodeNum);
+                if (nodeInfo?.position) {
+                  // Use device position with a small offset if available
+                  const latitudeI = nodeInfo.position.latitudeI;
+                  const longitudeI = nodeInfo.position.longitudeI;
+                  if (latitudeI !== undefined && longitudeI !== undefined) {
+                    const lat = latitudeI / 10000000;
+                    const lng = longitudeI / 10000000;
+                    const userLat = lat + LOCATION_OFFSET[1];
+                    const userLng = lng + LOCATION_OFFSET[0];
+                    console.log(
+                      "Setting user position next to selected device:",
+                      [userLng, userLat]
+                    );
+                    setUserPosition([userLng, userLat]);
+                    setLocationError(null);
+                    setIsFirstError(false);
+                    return;
+                  }
+                }
+              }
+            }
+          }
+
+          // Fall back to Libya if we couldn't find a device position
+          if (isDevelopment) {
+            console.log("Setting default location in Libya for development");
+            setUserPosition(DEFAULT_LIBYA_LOCATION);
+            setLocationError(null);
+            setIsFirstError(false);
+          }
         }
 
         // Only retry if permission is granted
@@ -132,7 +170,14 @@ export const UserPositionTracker = (): null => {
         window.clearTimeout(retryTimeout);
       }
     };
-  }, [permissionStatus, isFirstError, setUserPosition, setLocationError]);
+  }, [
+    permissionStatus,
+    isFirstError,
+    setUserPosition,
+    setLocationError,
+    selectedDevice,
+    deviceStore,
+  ]);
 
   return null;
 };

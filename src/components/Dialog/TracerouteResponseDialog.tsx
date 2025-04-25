@@ -11,6 +11,7 @@ import type { Protobuf, Types } from "@meshtastic/core";
 import { numberToHexUnpadded } from "@noble/curves/abstract/utils";
 
 import { TraceRoute } from "../PageComponents/Messages/TraceRoute.tsx";
+import { deviceNameParser } from "@app/core/utils/nameParser.ts";
 
 export interface TracerouteResponseDialogProps {
   traceroute: Types.PacketMetadata<Protobuf.Mesh.RouteDiscovery> | undefined;
@@ -26,12 +27,14 @@ export const TracerouteResponseDialog = ({
   const { nodes } = useDevice();
   const route: number[] = traceroute?.data.route ?? [];
   const routeBack: number[] = traceroute?.data.routeBack ?? [];
-  const snrTowards = (traceroute?.data.snrTowards ?? []).map(snr => snr / 4);
-  const snrBack = (traceroute?.data.snrBack ?? []).map(snr => snr / 4);
+  const snrTowards = (traceroute?.data.snrTowards ?? []).map((snr) => snr / 4);
+  const snrBack = (traceroute?.data.snrBack ?? []).map((snr) => snr / 4);
   const from = nodes.get(traceroute?.from ?? 0);
-  const longName = from?.user?.longName ??
+  const longName =
+    deviceNameParser(from?.user?.longName) ??
     (from ? `!${numberToHexUnpadded(from?.num)}` : "Unknown");
-  const shortName = from?.user?.shortName ??
+  const shortName =
+    deviceNameParser(from?.user?.shortName) ??
     (from ? `${numberToHexUnpadded(from?.num).substring(0, 4)}` : "UNK");
   const to = nodes.get(traceroute?.to ?? 0);
   return (

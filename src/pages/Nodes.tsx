@@ -2,6 +2,7 @@ import { LocationResponseDialog } from "@app/components/Dialog/LocationResponseD
 import { NodeOptionsDialog } from "@app/components/Dialog/NodeOptionsDialog.tsx";
 import { TracerouteResponseDialog } from "@app/components/Dialog/TracerouteResponseDialog.tsx";
 import Footer from "@app/components/UI/Footer.tsx";
+import { deviceNameParser } from "@app/core/utils/nameParser";
 import { Sidebar } from "@components/Sidebar.tsx";
 import { Avatar } from "@components/UI/Avatar.tsx";
 import { Mono } from "@components/generic/Mono.tsx";
@@ -20,14 +21,14 @@ export interface DeleteNoteDialogProps {
 }
 
 function shortNameFromNode(
-  node: ReturnType<useDevice>["nodes"][number],
+  node: ReturnType<useDevice>["nodes"][number]
 ): string {
-  const shortNameOfNode = node.user?.shortName ??
+  const shortNameOfNode =
+    node.user?.shortName ??
     (node.user?.macaddr
       ? `${base16
-        .stringify(node.user?.macaddr.subarray(4, 6) ?? [])
-        .toLowerCase()
-      }`
+          .stringify(node.user?.macaddr.subarray(4, 6) ?? [])
+          .toLowerCase()}`
       : `${numberToHexUnpadded(node.num).slice(-4)}`);
   return String(shortNameOfNode);
 }
@@ -47,7 +48,9 @@ const NodesPage = (): JSX.Element => {
 
   const filteredNodes = Array.from(nodes.values()).filter((node) => {
     if (node.num === hardware.myNodeNum) return false;
-    const nodeName = node.user?.longName ?? `!${numberToHexUnpadded(node.num)}`;
+    const nodeName =
+      deviceNameParser(node.user?.longName) ??
+      `!${numberToHexUnpadded(node.num)}`;
     return nodeName.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
@@ -63,7 +66,7 @@ const NodesPage = (): JSX.Element => {
     (traceroute: Types.PacketMetadata<Protobuf.Mesh.RouteDiscovery>) => {
       setSelectedTraceroute(traceroute);
     },
-    [],
+    []
   );
 
   useEffect(() => {
@@ -79,7 +82,7 @@ const NodesPage = (): JSX.Element => {
       if (location.to.valueOf() !== hardware.myNodeNum) return;
       setSelectedLocation(location);
     },
-    [hardware.myNodeNum],
+    [hardware.myNodeNum]
   );
 
   return (
@@ -121,32 +124,36 @@ const NodesPage = (): JSX.Element => {
                 tabIndex={0}
                 role="button"
               >
-                {node.user?.longName ??
+                {deviceNameParser(node.user?.longName) ??
                   (node.user?.macaddr
                     ? `Meshtastic ${base16
-                      .stringify(node.user?.macaddr.subarray(4, 6) ?? [])
-                      .toLowerCase()
-                    }`
+                        .stringify(node.user?.macaddr.subarray(4, 6) ?? [])
+                        .toLowerCase()}`
                     : `!${numberToHexUnpadded(node.num)}`)}
               </h1>,
               <Mono key="hops">
                 {node.lastHeard !== 0
                   ? node.viaMqtt === false && node.hopsAway === 0
                     ? "Direct"
-                    : `${node.hopsAway?.toString()} ${node.hopsAway > 1 ? "hops" : "hop"
-                    } away`
+                    : `${node.hopsAway?.toString()} ${
+                        node.hopsAway > 1 ? "hops" : "hop"
+                      } away`
                   : "-"}
                 {node.viaMqtt === true ? ", via MQTT" : ""}
               </Mono>,
               <Mono key="lastHeard">
-                {node.lastHeard === 0
-                  ? <p>Never</p>
-                  : <TimeAgo timestamp={node.lastHeard * 1000} />}
+                {node.lastHeard === 0 ? (
+                  <p>Never</p>
+                ) : (
+                  <TimeAgo timestamp={node.lastHeard * 1000} />
+                )}
               </Mono>,
               <Mono key="pki">
-                {node.user?.publicKey && node.user?.publicKey.length > 0
-                  ? <LockIcon className="text-green-600 mx-auto" />
-                  : <LockOpenIcon className="text-yellow-300 mx-auto" />}
+                {node.user?.publicKey && node.user?.publicKey.length > 0 ? (
+                  <LockIcon className="text-green-600 mx-auto" />
+                ) : (
+                  <LockOpenIcon className="text-yellow-300 mx-auto" />
+                )}
               </Mono>,
               <Mono key="snr">
                 {node.snr}db/

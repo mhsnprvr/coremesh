@@ -1,3 +1,5 @@
+import { deviceNameParser } from "@app/core/utils/nameParser";
+import { Avatar } from "@components/UI/Avatar.tsx";
 import {
   CommandDialog,
   CommandEmpty,
@@ -6,8 +8,10 @@ import {
   CommandItem,
   CommandList,
 } from "@components/UI/Command.tsx";
+import { usePinnedItems } from "@core/hooks/usePinnedItems.ts";
 import { useAppStore } from "@core/stores/appStore.ts";
 import { useDevice, useDeviceStore } from "@core/stores/deviceStore.ts";
+import { cn } from "@core/utils/cn.ts";
 import { useCommandState } from "cmdk";
 import {
   ArrowLeftRightIcon,
@@ -17,8 +21,10 @@ import {
   FactoryIcon,
   LayersIcon,
   LinkIcon,
+  type LucideIcon,
   MapIcon,
   MessageSquareIcon,
+  Pin,
   PlusIcon,
   PowerIcon,
   QrCodeIcon,
@@ -27,13 +33,8 @@ import {
   SmartphoneIcon,
   TrashIcon,
   UsersIcon,
-  Pin,
-  type LucideIcon,
 } from "lucide-react";
 import { useEffect } from "react";
-import { Avatar } from "@components/UI/Avatar.tsx";
-import { cn } from "@core/utils/cn.ts";
-import { usePinnedItems } from "@core/hooks/usePinnedItems.ts";
 
 export interface Group {
   label: string;
@@ -54,14 +55,13 @@ export interface SubItem {
 }
 
 export const CommandPalette = () => {
-  const {
-    commandPaletteOpen,
-    setCommandPaletteOpen,
-    setSelectedDevice,
-  } = useAppStore();
+  const { commandPaletteOpen, setCommandPaletteOpen, setSelectedDevice } =
+    useAppStore();
   const { getDevices } = useDeviceStore();
   const { setDialogOpen, setActivePage, connection } = useDevice();
-  const { pinnedItems, togglePinnedItem } = usePinnedItems({ storageName: 'pinnedCommandMenuGroups' });
+  const { pinnedItems, togglePinnedItem } = usePinnedItems({
+    storageName: "pinnedCommandMenuGroups",
+  });
 
   const groups: Group[] = [
     {
@@ -115,13 +115,14 @@ export const CommandPalette = () => {
           icon: ArrowLeftRightIcon,
           subItems: getDevices().map((device) => ({
             label:
-              device.nodes.get(device.hardware.myNodeNum)?.user?.longName ??
-              device.hardware.myNodeNum.toString(),
+              deviceNameParser(
+                device.nodes.get(device.hardware.myNodeNum)?.user?.longName
+              ) ?? device.hardware.myNodeNum.toString(),
             icon: (
               <Avatar
                 text={
-                  device.nodes.get(device.hardware.myNodeNum)?.user?.shortName ??
-                  device.hardware.myNodeNum.toString()
+                  device.nodes.get(device.hardware.myNodeNum)?.user
+                    ?.shortName ?? device.hardware.myNodeNum.toString()
                 }
               />
             ),
@@ -222,7 +223,7 @@ export const CommandPalette = () => {
           label: "Clear All Stored Message",
           icon: EraserIcon,
           action() {
-            setDialogOpen("clearMessages", true);
+            setDialogOpen("deleteMessages", true);
           },
         },
       ],
@@ -248,7 +249,10 @@ export const CommandPalette = () => {
   }, [setCommandPaletteOpen]);
 
   return (
-    <CommandDialog open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen}>
+    <CommandDialog
+      open={commandPaletteOpen}
+      onOpenChange={setCommandPaletteOpen}
+    >
       <CommandInput placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
@@ -264,7 +268,7 @@ export const CommandPalette = () => {
                   className={cn(
                     "transition-all duration-300 scale-100 cursor-pointer m-0.5 p-2 focus:*:data-label:opacity-100"
                   )}
-                  aria-description={
+                  aria-label={
                     pinnedItems.includes(group.label)
                       ? "Unpin command group"
                       : "Pin command group"

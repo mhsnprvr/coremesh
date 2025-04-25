@@ -1,8 +1,8 @@
 {
-  "name": "CoreMesh",
-  "short_name": "CoreMesh",
+  "name": "Lunamesh",
+  "short_name": "Lunamesh",
   "start_url": ".",
-  "description": "CoreMesh web app",
+  "description": "Lunamesh web app",
   "icons": [
     {
       "src": "/icon.svg",

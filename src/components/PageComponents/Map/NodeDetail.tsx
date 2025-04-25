@@ -29,6 +29,7 @@ import {
 } from "@radix-ui/react-tooltip";
 import { useDevice } from "@core/stores/deviceStore.ts";
 import { MessageType, useMessageStore } from "@core/stores/messageStore.ts";
+import { deviceNameParser } from "@app/core/utils/nameParser";
 
 export interface NodeDetailProps {
   node: ProtobufType.Mesh.NodeInfo;
@@ -37,8 +38,10 @@ export interface NodeDetailProps {
 export const NodeDetail = ({ node }: NodeDetailProps) => {
   const { setChatType, setActiveChat } = useMessageStore();
   const { setActivePage } = useDevice();
-  const name = node.user?.longName || `!${numberToHexUnpadded(node.num)}`;
-  const shortName = node.user?.shortName ?? "UNK";
+  const name =
+    deviceNameParser(node.user?.longName) ||
+    `!${numberToHexUnpadded(node.num)}`;
+  const shortName = deviceNameParser(node.user?.shortName) || "UNK";
   const hwModel = node.user?.hwModel ?? 0;
   const hardwareType =
     Protobuf.Mesh.HardwareModel[hwModel]?.replaceAll("_", " ") ?? `${hwModel}`;
@@ -55,27 +58,27 @@ export const NodeDetail = ({ node }: NodeDetailProps) => {
         <div className="flex flex-col items-center gap-2 min-w-6 pt-1">
           <Avatar text={shortName} />
 
-          <div onFocusCapture={(e) => {
-            // Required to prevent DM tooltip auto-appearing on creation
-            e.stopPropagation();
-          }}>
-            {node.user?.publicKey && node.user?.publicKey.length > 0
-              ? (
-                <LockIcon
-                  className="text-green-600 mb-1.5"
-                  size={12}
-                  strokeWidth={3}
-                  aria-label="Public Key Enabled"
-                />
-              )
-              : (
-                <LockOpenIcon
-                  className="text-yellow-500 mb-1.5"
-                  size={12}
-                  strokeWidth={3}
-                  aria-label="No Public Key"
-                />
-              )}
+          <div
+            onFocusCapture={(e) => {
+              // Required to prevent DM tooltip auto-appearing on creation
+              e.stopPropagation();
+            }}
+          >
+            {node.user?.publicKey && node.user?.publicKey.length > 0 ? (
+              <LockIcon
+                className="text-green-600 mb-1.5"
+                size={12}
+                strokeWidth={3}
+                aria-label="Public Key Enabled"
+              />
+            ) : (
+              <LockOpenIcon
+                className="text-yellow-500 mb-1.5"
+                size={12}
+                strokeWidth={3}
+                aria-label="No Public Key"
+              />
+            )}
 
             <TooltipProvider>
               <Tooltip>
@@ -115,16 +118,19 @@ export const NodeDetail = ({ node }: NodeDetailProps) => {
           {!!node.deviceMetrics?.batteryLevel && (
             <div
               className="flex items-center gap-1 mt-0.5"
-              title={`${node.deviceMetrics?.voltage?.toPrecision(3) ?? "Unknown"
-                } volts`}
+              title={`${
+                node.deviceMetrics?.voltage?.toPrecision(3) ?? "Unknown"
+              } volts`}
             >
-              {node.deviceMetrics?.batteryLevel > 100
-                ? <BatteryChargingIcon size={22} />
-                : node.deviceMetrics?.batteryLevel > 80
-                  ? <BatteryFullIcon size={22} />
-                  : node.deviceMetrics?.batteryLevel > 20
-                    ? <BatteryMediumIcon size={22} />
-                    : <BatteryLowIcon size={22} />}
+              {node.deviceMetrics?.batteryLevel > 100 ? (
+                <BatteryChargingIcon size={22} />
+              ) : node.deviceMetrics?.batteryLevel > 80 ? (
+                <BatteryFullIcon size={22} />
+              ) : node.deviceMetrics?.batteryLevel > 20 ? (
+                <BatteryMediumIcon size={22} />
+              ) : (
+                <BatteryLowIcon size={22} />
+              )}
               <Subtle aria-label="Battery">
                 {node.deviceMetrics?.batteryLevel > 100
                   ? "Charging"
@@ -141,7 +147,7 @@ export const NodeDetail = ({ node }: NodeDetailProps) => {
           <div
             className="flex gap-1"
             title={new Date(node.lastHeard * 1000).toLocaleString(
-              navigator.language,
+              navigator.language
             )}
           >
             <div>

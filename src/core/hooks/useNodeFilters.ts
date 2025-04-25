@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import type { Protobuf } from "@meshtastic/core";
 import { numberToHexUnpadded } from "@noble/curves/abstract/utils";
+import { deviceNameParser } from "../utils/nameParser";
 
 interface BooleanFilter {
   key: string;
@@ -27,9 +28,12 @@ interface SearchFilter {
 export type FilterConfig = BooleanFilter | RangeFilter | SearchFilter;
 
 export type FilterValueMap = {
-  [C in FilterConfig as C["key"]]: C extends BooleanFilter ? boolean
-    : C extends RangeFilter ? [number, number]
-    : C extends SearchFilter ? string
+  [C in FilterConfig as C["key"]]: C extends BooleanFilter
+    ? boolean
+    : C extends RangeFilter
+    ? [number, number]
+    : C extends SearchFilter
+    ? string
     : never;
 };
 
@@ -41,14 +45,19 @@ export const filterConfigs: FilterConfig[] = [
     type: "search",
     predicate: (node, text: string) => {
       if (!text) return true;
-      const shortName = node.user?.shortName?.toString().toLowerCase() ?? "";
-      const longName = node.user?.longName?.toString().toLowerCase() ?? "";
+      const shortName =
+        deviceNameParser(node.user?.shortName)?.toString().toLowerCase() ?? "";
+      const longName =
+        deviceNameParser(node.user?.longName)?.toString().toLowerCase() ?? "";
       const nodeNum = node.num?.toString() ?? "";
       const nodeNumHex = numberToHexUnpadded(node.num) ?? "";
       const search = text.toLowerCase();
-      return shortName.includes(search) || longName.includes(search) ||
+      return (
+        shortName.includes(search) ||
+        longName.includes(search) ||
         nodeNum.includes(search) ||
-        nodeNumHex.includes(search.replace(/!/g, ""));
+        nodeNumHex.includes(search.replace(/!/g, ""))
+      );
     },
   },
   {
@@ -123,9 +132,7 @@ export function useNodeFilters(nodes: Protobuf.Mesh.NodeInfo[]) {
     }, {} as FilterValueMap);
   }, []);
 
-  const [filters, setFilters] = useState<FilterValueMap>(
-    defaultState,
-  );
+  const [filters, setFilters] = useState<FilterValueMap>(defaultState);
 
   const resetFilters = useCallback(() => {
     setFilters(defaultState);
@@ -135,7 +142,7 @@ export function useNodeFilters(nodes: Protobuf.Mesh.NodeInfo[]) {
     <K extends keyof FilterValueMap>(key: K, value: FilterValueMap[K]) => {
       setFilters((f) => ({ ...f, [key]: value }));
     },
-    [],
+    []
   );
 
   const filteredNodes = useMemo(
@@ -143,7 +150,7 @@ export function useNodeFilters(nodes: Protobuf.Mesh.NodeInfo[]) {
       nodes.filter((node) =>
         filterConfigs.every((cfg) => cfg.predicate(node, filters[cfg.key]))
       ),
-    [nodes, filters],
+    [nodes, filters]
   );
 
   return {

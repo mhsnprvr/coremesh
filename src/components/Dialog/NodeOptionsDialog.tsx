@@ -14,6 +14,7 @@ import { TrashIcon } from "lucide-react";
 
 import { Button } from "../UI/Button.tsx";
 import { MessageType, useMessageStore } from "@core/stores/messageStore.ts";
+import { deviceNameParser } from "@app/core/utils/nameParser.ts";
 
 export interface NodeOptionsDialogProps {
   node: Protobuf.Mesh.NodeInfo | undefined;
@@ -27,17 +28,16 @@ export const NodeOptionsDialog = ({
   onOpenChange,
 }: NodeOptionsDialogProps) => {
   const { setDialogOpen, connection, setActivePage } = useDevice();
-  const {
-    setNodeNumToBeRemoved,
-    setNodeNumDetails,
-  } = useAppStore();
+  const { setNodeNumToBeRemoved, setNodeNumDetails } = useAppStore();
   const { setChatType, setActiveChat } = useMessageStore();
 
   if (!node) return null;
 
-  const longName = node?.user?.longName ??
+  const longName =
+    deviceNameParser(node?.user?.longName) ??
     (node ? `!${numberToHexUnpadded(node?.num)}` : "Unknown");
-  const shortName = node?.user?.shortName ??
+  const shortName =
+    deviceNameParser(node?.user?.shortName) ??
     (node ? `${numberToHexUnpadded(node?.num).substring(0, 4)}` : "UNK");
 
   function handleDirectMessage() {

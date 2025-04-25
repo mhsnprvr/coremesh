@@ -1,26 +1,30 @@
 import type { TabElementProps } from "@components/Dialog/NewDeviceDialog.tsx";
 import { Button } from "@components/UI/Button.tsx";
 import { Input } from "@components/UI/Input.tsx";
-import { Link } from "@components/UI/Typography/Link.tsx";
 import { Label } from "@components/UI/Label.tsx";
 import { Switch } from "@components/UI/Switch.tsx";
+import { Link } from "@components/UI/Typography/Link.tsx";
 import { useAppStore } from "@core/stores/appStore.ts";
 import { useDeviceStore } from "@core/stores/deviceStore.ts";
+import { useMessageStore } from "@core/stores/messageStore.ts";
 import { subscribeAll } from "@core/subscriptions.ts";
 import { randId } from "@core/utils/randId.ts";
 import { MeshDevice } from "@meshtastic/core";
 import { TransportHTTP } from "@meshtastic/transport-http";
-import { useState } from "react";
-import { useForm, useController } from "react-hook-form";
 import { AlertTriangle } from "lucide-react";
-import { useMessageStore } from "@core/stores/messageStore.ts";
+import { useState } from "react";
+import { useController, useForm } from "react-hook-form";
 
 interface FormData {
   ip: string;
   tls: boolean;
 }
 
-export const HTTP = ({ closeDialog, setConnectionInProgress, connectionInProgress }: TabElementProps) => {
+export const HTTP = ({
+  closeDialog,
+  setConnectionInProgress,
+  connectionInProgress,
+}: TabElementProps) => {
   const isURLHTTPS = location.protocol === "https:";
 
   const { addDevice } = useDeviceStore();
@@ -30,11 +34,11 @@ export const HTTP = ({ closeDialog, setConnectionInProgress, connectionInProgres
   const { control, handleSubmit, register } = useForm<FormData>({
     defaultValues: {
       ip: ["client.meshtastic.org", "localhost"].includes(
-        globalThis.location.hostname,
+        globalThis.location.hostname
       )
-        ? "meshtastic.local"
+        ? "lunamesh.local"
         : globalThis.location.host,
-      tls: isURLHTTPS ? true : false,
+      tls: isURLHTTPS,
     },
   });
 
@@ -42,7 +46,10 @@ export const HTTP = ({ closeDialog, setConnectionInProgress, connectionInProgres
     field: { value: tlsValue, onChange: setTLS },
   } = useController({ name: "tls", control });
 
-  const [connectionError, setConnectionError] = useState<{ host: string; secure: boolean } | null>(null);
+  const [connectionError, setConnectionError] = useState<{
+    host: string;
+    secure: boolean;
+  } | null>(null);
 
   const onSubmit = handleSubmit(async (data) => {
     setConnectionInProgress(true);
@@ -91,21 +98,34 @@ export const HTTP = ({ closeDialog, setConnectionInProgress, connectionInProgres
         {connectionError && (
           <div className="mt-2 mb-2 p-3 rounded-md bg-amber-100 border border-amber-300 dark:bg-amber-100 dark:border-amber-300">
             <div className="flex gap-2 items-start">
-              <AlertTriangle className="shrink-0 mt-0.5 text-amber-600 dark:text-amber-600" size={20} />
+              <AlertTriangle
+                className="shrink-0 mt-0.5 text-amber-600 dark:text-amber-600"
+                size={20}
+              />
               <div>
                 <p className="text-sm font-medium text-amber-800 dark:text-amber-800">
                   Connection Failed
                 </p>
                 <p className="text-xs mt-1 text-amber-700 dark:text-amber-700">
-                  Could not connect to the device. {connectionError.secure && "If using HTTPS, you may need to accept a self-signed certificate first. "}
+                  Could not connect to the device.{" "}
+                  {connectionError.secure &&
+                    "If using HTTPS, you may need to accept a self-signed certificate first. "}
                   Please open{" "}
                   <Link
-                    href={`${connectionError.secure ? "https" : "http"}://${connectionError.host}`}
+                    href={`${connectionError.secure ? "https" : "http"}://${
+                      connectionError.host
+                    }`}
                     className="underline font-medium text-amber-800 dark:text-amber-800"
                   >
-                    {`${connectionError.secure ? "https" : "http"}://${connectionError.host}`}
+                    {`${connectionError.secure ? "https" : "http"}://${
+                      connectionError.host
+                    }`}
                   </Link>{" "}
-                  in a new tab{connectionError.secure ? ", accept any TLS warnings if prompted, then try again" : ""}.{" "}
+                  in a new tab
+                  {connectionError.secure
+                    ? ", accept any TLS warnings if prompted, then try again"
+                    : ""}
+                  .{" "}
                   <Link
                     href="https://meshtastic.org/docs/software/web-client/#http"
                     className="underline font-medium text-amber-800 dark:text-amber-800"
@@ -118,10 +138,7 @@ export const HTTP = ({ closeDialog, setConnectionInProgress, connectionInProgres
           </div>
         )}
       </div>
-      <Button
-        type="submit"
-        className="dark:bg-slate-900 dark:text-white"
-      >
+      <Button type="submit" className="dark:bg-slate-900 dark:text-white">
         <span>{connectionInProgress ? "Connecting..." : "Connect"}</span>
       </Button>
     </form>

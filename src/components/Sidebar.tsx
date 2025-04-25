@@ -19,6 +19,7 @@ import {
   UsersIcon,
   ZapIcon,
 } from "lucide-react";
+import { deviceNameParser } from "@app/core/utils/nameParser";
 
 export interface SidebarProps {
   children?: React.ReactNode;
@@ -102,7 +103,9 @@ export const Sidebar = ({ children }: SidebarProps) => {
               <span className="text-lg font-medium">
                 {myNode.user?.shortName ?? "UNK"}
               </span>
-              <Subtle>{myNode.user?.longName ?? "UNK"}</Subtle>
+              <Subtle>
+                {deviceNameParser(myNode.user?.longName) ?? "UNK"}
+              </Subtle>
             </div>
             <button
               type="button"

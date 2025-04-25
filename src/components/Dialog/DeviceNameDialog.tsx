@@ -14,6 +14,7 @@ import { Input } from "@components/UI/Input.tsx";
 import { Label } from "@components/UI/Label.tsx";
 import { Protobuf } from "@meshtastic/core";
 import { useForm } from "react-hook-form";
+import { deviceNameParser } from "@app/core/utils/nameParser";
 
 export interface User {
   longName: string;
@@ -35,8 +36,8 @@ export const DeviceNameDialog = ({
 
   const { register, handleSubmit } = useForm<User>({
     values: {
-      longName: myNode?.user?.longName ?? "Unknown",
-      shortName: myNode?.user?.shortName ?? "Unknown",
+      longName: deviceNameParser(myNode?.user?.longName) ?? "Unknown",
+      shortName: deviceNameParser(myNode?.user?.shortName) ?? "Unknown",
     },
   });
 
@@ -45,7 +46,7 @@ export const DeviceNameDialog = ({
       create(Protobuf.Mesh.UserSchema, {
         ...myNode?.user,
         ...data,
-      }),
+      })
     );
     onOpenChange(false);
   });
