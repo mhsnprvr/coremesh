@@ -1,9 +1,9 @@
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import { type ReactNode, useState } from "react";
+import { useState } from "react";
 
 export interface TableProps {
   headings: Heading[];
-  rows: ReactNode[][];
+  rows: [][];
 }
 
 export interface Heading {
@@ -26,14 +26,6 @@ function numericHops(hopsAway: string): number {
   return Number.MAX_SAFE_INTEGER;
 }
 
-// Utility function to safely extract props
-function getElementProps(element: ReactNode): Record<string, any> {
-  if (element && typeof element === "object" && "props" in element) {
-    return element.props || {};
-  }
-  return {};
-}
-
 export const Table = ({ headings, rows }: TableProps) => {
   const [sortColumn, setSortColumn] = useState<string | null>("Last Heard");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -51,16 +43,13 @@ export const Table = ({ headings, rows }: TableProps) => {
     if (!sortColumn) return 0;
 
     const columnIndex = headings.findIndex((h) => h.title === sortColumn);
-    const aValue = a[columnIndex];
-    const bValue = b[columnIndex];
-
-    const aProps = getElementProps(aValue);
-    const bProps = getElementProps(bValue);
+    const aValue = a[columnIndex].props.children;
+    const bValue = b[columnIndex].props.children;
 
     // Custom comparison for 'Last Heard' column
     if (sortColumn === "Last Heard") {
-      const aTimestamp = aProps.timestamp ?? 0;
-      const bTimestamp = bProps.timestamp ?? 0;
+      const aTimestamp = aValue.props.timestamp ?? 0;
+      const bTimestamp = bValue.props.timestamp ?? 0;
 
       if (aTimestamp < bTimestamp) {
         return sortOrder === "asc" ? -1 : 1;
@@ -73,14 +62,11 @@ export const Table = ({ headings, rows }: TableProps) => {
 
     // Custom comparison for 'Connection' column
     if (sortColumn === "Connection") {
-      const aChildren = aProps.children;
-      const bChildren = bProps.children;
-
       const aNumHops = numericHops(
-        Array.isArray(aChildren) ? aChildren[0] : aChildren
+        aValue instanceof Array ? aValue[0] : aValue
       );
       const bNumHops = numericHops(
-        Array.isArray(bChildren) ? bChildren[0] : bChildren
+        bValue instanceof Array ? bValue[0] : bValue
       );
 
       if (aNumHops < bNumHops) {
@@ -132,19 +118,20 @@ export const Table = ({ headings, rows }: TableProps) => {
         </tr>
       </thead>
       <tbody>
-        {sortedRows.map((row, rowIndex) => (
+        {sortedRows.map((row, index) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: TODO: Once this table is sortable, this should get fixed.
           <tr
-            key={`row-${rowIndex}`}
+            key={index}
             className={`${
-              rowIndex % 2
+              index % 2
                 ? "bg-white dark:bg-white/2"
                 : "bg-slate-50/50 dark:bg-slate-50/5"
             } border-b-1 border-slate-200 dark:border-slate-900`}
           >
-            {row.map((item, cellIndex) =>
-              cellIndex === 0 ? (
+            {row.map((item, index) =>
+              index === 0 ? (
                 <th
-                  key={`cell-th-${rowIndex}-${cellIndex}`}
+                  key={item.key ?? index}
                   className="whitespace-nowrap py-2 text-sm text-text-secondary first:pl-2"
                   scope="row"
                 >
@@ -152,7 +139,7 @@ export const Table = ({ headings, rows }: TableProps) => {
                 </th>
               ) : (
                 <td
-                  key={`cell-td-${rowIndex}-${cellIndex}`}
+                  key={item.key ?? index}
                   className="whitespace-nowrap py-2 text-sm text-text-secondary first:pl-2"
                 >
                   {item}
